@@ -1,0 +1,10 @@
+{
+  "execMap": {
+    "ts": "node --import @swc-node/register/esm-register src/index.ts"
+  },
+  "ignore": ["bin", "node_modules", "test", "tmp"],
+  "watch": [
+    "src/**/*.ts",
+    "!src/**/*.spec.ts"
+  ]
+}
