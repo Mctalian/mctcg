@@ -3,4 +3,6 @@ node_modules
 out/
 pdfs/
 
+.next
+
 .DS_Store

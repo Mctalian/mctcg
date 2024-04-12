@@ -1,12 +1,14 @@
 import Koa from "koa";
-import { setupKoaMiddleware } from "./koa.middleware";
-import { setupDbMiddleware } from "./db.middleware";
-import { setupPostBodyMiddleware } from "./post-body.middleware";
-import { setupRouterMiddleware } from "./router.middleware";
+import KoaBodyParser from "koa-bodyparser";
+import KoaJson from "koa-json";
+import KoaLogger from "koa-logger";
+import { requirePostBody } from "./post-body.middleware.js";
+import { router } from "../routes/index.js";
 
-export function setupAppMiddleware(app: Koa) {
-  setupKoaMiddleware(app);
-  setupPostBodyMiddleware(app);
-  setupDbMiddleware(app);
-  setupRouterMiddleware(app);
+export function setupMiddleware(api: Koa) {
+  api.use(KoaJson());
+  api.use(KoaLogger());
+  api.use(KoaBodyParser());
+  api.use(requirePostBody);
+  api.use(router.routes()).use(router.allowedMethods());
 }

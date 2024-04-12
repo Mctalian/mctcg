@@ -1,11 +1,8 @@
 import KoaRouter from 'koa-router';
-import { setupCacheRoutes } from './cache.routes';
-import { setupDecklistRoutes } from './decklist.routes';
-import { logger } from '../../utils';
+import { apiRouter } from './api/index.js';
+import { frontendRouter } from './frontend/index.js';
 
-export function setupAppRoutes(router: KoaRouter) {
-  logger.silly("Setting up app routes...");
-  setupCacheRoutes(router);
-  setupDecklistRoutes(router);
-  logger.silly("App routes setup complete.");
-}
+export const router = new KoaRouter();
+
+router.use(apiRouter.routes(), apiRouter.allowedMethods());
+router.use(frontendRouter.routes(), frontendRouter.allowedMethods());

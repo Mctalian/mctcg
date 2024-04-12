@@ -1,0 +1,19 @@
+import KoaRouter from "koa-router";
+import { ExtendableContext } from "koa";
+
+import { DeckGenerateDto } from "../../../shared/deck-dto.interface.js";
+import { Deck } from "../../../app/decks/deck.js";
+import { CacheContext } from "../../../shared/cache-context.interface.js";
+import { SectionedDeck } from "../../../app/decks/sectioned-deck.interface.js";
+import { DeckService } from "../../../app/services/deck.service.js";
+
+export const deckRouter = new KoaRouter({
+  prefix: "/deck"
+});
+
+deckRouter.post("/generate", async (ctx: ExtendableContext, next) => {
+  const { playerName, playerId, playerDob, format, ...deckDto } = ctx.request.body as DeckGenerateDto;
+  const deck = new Deck(ctx as CacheContext, deckDto as SectionedDeck);
+  await new DeckService(ctx).generatePdf({ playerName, playerId, playerDob, format, ...deck });
+  await next();
+});
