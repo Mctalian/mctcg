@@ -6,6 +6,8 @@ import { app } from "./server/next/app.js";
 
 env.load();
 
+const PORT = process.env.PORT || 3000;
+
 app.prepare().then(() => {
   logger.info("Next.js app prepared. Setting up Koa...");
 
@@ -13,8 +15,8 @@ app.prepare().then(() => {
 
   setupMiddleware(api);
   
-  api.listen(3000, () => {
-    logger.info("Server listening on port 3000");
+  api.listen(PORT, () => {
+    logger.info(`Server listening on port ${PORT}`);
   });
 });
 
