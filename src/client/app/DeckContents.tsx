@@ -1,5 +1,6 @@
 import { Box, Button, List } from "@mui/material";
 import CardSection from "./CardSection";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function DeckContents({ deck, deckName, setStartPdfFlow }) {
   return (
@@ -25,7 +26,13 @@ export default function DeckContents({ deck, deckName, setStartPdfFlow }) {
         <CardSection name="Trainers" cards={deck.Trainer} />
         <CardSection name="Energy" cards={deck.Energy} />
       </List>
-      <Button onClick={(e) => setStartPdfFlow(true)} variant="contained">Generate PDF</Button>
+      <Button
+        onClick={(e) => {
+          setStartPdfFlow(true);
+          sendGAEvent({ event: "buttonClicked", value: "startPdfGenerate"})
+        }}
+        variant="contained"
+      >Generate PDF</Button>
     </Box>
   )
 }

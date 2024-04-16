@@ -3,6 +3,7 @@ import styles from './DeckImportForm.module.css';
 import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setLoading } from './loadingSlice';
+import { sendGAEvent } from '@next/third-parties/google';
 
 export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {
   const deckNameId = useId();
@@ -75,7 +76,14 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
           </Select>
         </FormControl>
 
-        <Button className={styles.formButton} type="submit" variant="contained" fullWidth disabled={loading}>
+        <Button
+          className={styles.formButton}
+          type="submit"
+          variant="contained"
+          fullWidth
+          disabled={loading}
+          onClick={() => sendGAEvent({ event: "buttonClicked", value: "decklistImport"})}
+        >
           Import
         </Button>
       </Box>

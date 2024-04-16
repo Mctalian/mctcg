@@ -4,6 +4,7 @@ import { useId } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { setLoading } from "./loadingSlice";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function PdfPrepForm({ deck, generateFormAction }) {
   const playerNameId = useId();
@@ -74,7 +75,12 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
 
       <input className={styles.deckInput} type="hidden" name="deck" value={JSON.stringify(deck)}/>
 
-      <Button type="submit" variant="contained" disabled={loading}>
+      <Button
+        type="submit"
+        variant="contained"
+        disabled={loading}
+        onClick={() => sendGAEvent({ event: "buttonClicked", value: "generatePdf"})}
+      >
         Generate PDF
       </Button>
     </Box>
