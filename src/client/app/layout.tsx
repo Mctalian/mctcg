@@ -16,13 +16,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isProd = process.env.IS_PROD === "true";
   return (
     <html lang="en">
       <body className={roboto.className}>
         {children}
       </body>
-      ( isProd && <GoogleAnalytics gaId="G-PVN3072TQ6" /> )
+      <GoogleAnalytics gaId="G-PVN3072TQ6" />
     </html>
   );
 }
