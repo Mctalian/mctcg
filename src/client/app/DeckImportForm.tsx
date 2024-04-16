@@ -1,10 +1,12 @@
 import { useId } from 'react';
 import styles from './DeckImportForm.module.css';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
 
 export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {
   const deckNameId = useId();
   const deckListId = useId();
+  const sortLabelId = useId();
+  const sortId = useId();
   return (
     <>
       <div className={styles.description}>
@@ -46,6 +48,21 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
           variant="filled"
           required
         />
+
+        <FormControl required fullWidth>
+          <FormLabel id={sortLabelId}>Sort By</FormLabel>
+          <Select
+            labelId={sortLabelId}
+            id={sortId}
+            name="sortType"
+            defaultValue={"Alphabetical"}
+          >
+            <MenuItem value="Alphabetical">Alphabetical</MenuItem>
+            <MenuItem value="SetAlphabetical">By Set (Alphabetical)</MenuItem>
+            <MenuItem value="SetChronological">By Set (Release Date)</MenuItem>
+            <MenuItem value="Quantity">By Quantity</MenuItem>
+          </Select>
+        </FormControl>
 
         <Button className={styles.formButton} type="submit" variant="contained" fullWidth>
           Import

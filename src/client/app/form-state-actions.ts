@@ -2,12 +2,13 @@ import { isValid } from "date-fns";
 
 export async function importDecklist(_prevState, queryData) {
   const decklist = queryData.get("decklist");
+  const sortType = queryData.get("sortType");
   const response = await fetch("/api/v1/decklist/import", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ decklist }),
+    body: JSON.stringify({ decklist, sortType }),
   });
   const deck = await response.json();
   return deck;

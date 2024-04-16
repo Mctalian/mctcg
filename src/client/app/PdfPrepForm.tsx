@@ -54,6 +54,7 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
         <RadioGroup
           aria-labelledby={formatLabelId}
           name="format"
+          defaultValue={"standard"}
         >
           <FormControlLabel value="standard" control={<Radio />} label="Standard" />
           <FormControlLabel value="expanded" control={<Radio />} label="Expanded" />
