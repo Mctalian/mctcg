@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 import "./globals.css";
 
 const roboto = Roboto({ weight: ["300", "400", "500", "700"], subsets: ["latin"]});
@@ -14,9 +16,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isProd = process.env.IS_PROD === "true";
   return (
     <html lang="en">
-      <body className={roboto.className}>{children}</body>
+      <body className={roboto.className}>
+        {children}
+      </body>
+      ( isProd && <GoogleAnalytics gaId="G-PVN3072TQ6" /> )
     </html>
   );
 }
