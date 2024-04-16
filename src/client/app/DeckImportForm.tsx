@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import styles from './DeckImportForm.module.css';
+import { Box, Button, TextField } from '@mui/material';
 
 export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {
   const deckNameId = useId();
@@ -11,21 +12,45 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
           Begin by pasting your decklist below. Decklists can be generated from Pokemon TCG Live.
         </p>
       </div>
-      <form action={importFormAction}>
-        <div className={styles.formField}>
-          <label htmlFor={deckNameId}>Deck Name</label>
-          <input id={deckNameId} type="text" name="deckName" onChange={(e) => setDeckName(e.target.value)} value={deckName}/>
-        </div>
+      <Box
+        component={"form"}
+        action={importFormAction}
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        p={2}
+        minWidth={400}
+        width="50vw"
+        maxWidth={800}
+      >
 
-        <div className={styles.formField}>
-          <label htmlFor={deckListId}>Decklist</label>
-          <textarea id={deckListId} className={styles.textarea} name="decklist" rows={12} cols={60} required/>
-        </div>
+        <TextField
+          id={deckNameId}
+          name="deckName"
+          label="Deck Name"
+          variant="filled"
+          required
+          fullWidth
+          value={deckName}
+          onChange={(e) => setDeckName(e.target.value)}
+        />
+        
 
-        <button className={styles.formButton} type="submit">
+        <TextField
+          id={deckListId}
+          name="decklist"
+          label="Decklist"
+          multiline
+          fullWidth
+          rows={12}
+          variant="filled"
+          required
+        />
+
+        <Button className={styles.formButton} type="submit" variant="contained" fullWidth>
           Import
-        </button>
-      </form>
+        </Button>
+      </Box>
     </>
   )
 }

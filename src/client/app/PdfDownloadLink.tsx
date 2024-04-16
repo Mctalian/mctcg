@@ -1,11 +1,14 @@
+import { Button } from "@mui/material";
+import styles from "./PdfDownloadLink.module.css";
+
 export default function PdfDownloadLink({ blob }) {
   const href = URL.createObjectURL(blob);
   return (
     <>
-      <h2>Successfully generated your Decklist as a PDF!</h2>
-      <a href={href} download="decklist.pdf">
+      <h2>Successfully generated your Official Pokémon Decklist PDF! 🎉</h2>
+      <Button className={styles.download} href={href} download="decklist.pdf" variant="contained">
         Download PDF
-      </a>
+      </Button>
     </>
   )
 }
