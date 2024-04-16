@@ -1,6 +1,6 @@
 import { PDFDocument, PDFForm, PDFPage, rgb } from "pdf-lib";
 import { access, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
-import { differenceInCalendarYears } from "date-fns";
+import { differenceInCalendarYears, getDate, getMonth, getYear } from "date-fns";
 import { SectionedDeck } from "../decks/sectioned-deck.interface.js";
 import { logger } from "../../utils/index.js";
 import { Format } from "./format.enum.js";
@@ -203,9 +203,9 @@ export class DeckExporter {
       width: 36,
     });
     if (this.dob) {
-      dobMonthField.setText(this.datePad((this.dob.getMonth() + 1).toString()));
-      dobDayField.setText(this.datePad((this.dob.getDate() + 1).toString()));
-      dobYearField.setText(this.dob.getFullYear().toString());
+      dobMonthField.setText(this.datePad((getMonth(this.dob) + 1).toString()));
+      dobDayField.setText(this.datePad(getDate(this.dob).toString()));
+      dobYearField.setText(getYear(this.dob).toString());
     }
   }
 
