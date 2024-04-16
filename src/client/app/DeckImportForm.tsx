@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import styles from './page.module.css';
+import styles from './DeckImportForm.module.css';
 
 export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {
   const deckNameId = useId();

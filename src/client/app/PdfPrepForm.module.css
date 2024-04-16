@@ -1,0 +1,5 @@
+@import "./form.module.css";
+
+.deckInput {
+  display: none;
+}

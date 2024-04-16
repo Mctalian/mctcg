@@ -1,4 +1,4 @@
-import styles from "./page.module.css";
+import styles from "./PdfPrepForm.module.css";
 import { useId } from "react";
 
 export default function PdfPrepForm({ deck, generateFormAction }) {
