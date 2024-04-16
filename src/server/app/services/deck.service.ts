@@ -29,6 +29,7 @@ export class DeckService {
     if (await this.isDeckValid(deck, format)) {
       const uniqueFilename = `out/${randomUUID()}.pdf`;
       const pdfFile = await deck.export(playerName, playerId, new Date(playerDob), format, uniqueFilename).catch((error) => {
+        logger.error(JSON.stringify(error));
         this.ctx.status = 500;
         this.ctx.body = "Error generating PDF";
         return null;

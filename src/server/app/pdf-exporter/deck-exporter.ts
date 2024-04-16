@@ -58,7 +58,6 @@ export class DeckExporter {
     try {
       await access(LOCAL_FORM_PATH);
     } catch (error) {
-      logger.debug(JSON.stringify(error));
       if (error.code !== "ENOENT") {
         throw error;
       }
@@ -108,6 +107,11 @@ export class DeckExporter {
   async saveToFile() {
     await this.cleanUpFile();
     const pdfBytes = await this.generatePdf();
+    await mkdir("out").catch((error) => {
+      if (error.code !== "EEXIST") {
+        throw error;
+      }
+    });
     await writeFile(this.fileName, pdfBytes);
     logger.debug(`Saved filled form to file: ${this.fileName}`);
     return this.fileName;
