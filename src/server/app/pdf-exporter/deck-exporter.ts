@@ -1,5 +1,5 @@
 import { PDFDocument, PDFForm, PDFPage, rgb } from "pdf-lib";
-import { access, readFile, unlink, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { differenceInCalendarYears } from "date-fns";
 import { SectionedDeck } from "../decks/sectioned-deck.interface.js";
 import { logger } from "../../utils/index.js";
@@ -58,9 +58,15 @@ export class DeckExporter {
     try {
       await access(LOCAL_FORM_PATH);
     } catch (error) {
+      logger.debug(JSON.stringify(error));
       if (error.code !== "ENOENT") {
         throw error;
       }
+      await mkdir("pdfs").catch((error) => {
+        if (error.code !== "EEXIST") {
+          throw error;
+        }
+      });
       logger.debug(`Downloading form...`);
       const formBytes = await fetch(FORM_URL).then(res => res.arrayBuffer());
       await writeFile(LOCAL_FORM_PATH, new Uint8Array(formBytes));
