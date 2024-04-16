@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useFormState } from "react-dom";
+import { Provider } from "react-redux";
 import Image from "next/image";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -10,13 +10,10 @@ import { red, yellow } from "@mui/material/colors";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
-import styles from "./page.module.css";
-import DeckContents from "./DeckContents";
-import DeckImportForm from "./DeckImportForm";
-import PdfPrepForm from "./PdfPrepForm";
-import PdfDownloadLink from "./PdfDownloadLink";
-import PdfGenerationError from "./PdfGenerationError";
-import { generatePdf, importDecklist } from "./form-state-actions";
+import { store } from "./store";
+import PageContentStateMachine from "./PageContentStateMachine";
+import Loader from "./Loader";
+import Footer from "./Footer";
 
 
 const darkTheme = createTheme({
@@ -28,45 +25,25 @@ const darkTheme = createTheme({
 });
 
 export default function Page() {
-  const [deck, importFormAction] = useFormState(importDecklist, null);
-  const [pdf, generateFormAction] = useFormState(generatePdf, { blob: null, error: null });
-
-  const [startPdfFlow, setStartPdfFlow] = React.useState(false);
-  const [deckName, setDeckName] = React.useState(`Deck ${new Date().toISOString()}`);
-
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <AppBar position="static">
-          <Toolbar>
-            <Image src="/pdeckf.png" alt="PDeckF Logo" width={40} height={40} />
-            <Typography variant="h6" component="div" sx={{ margin: "0 1rem" }}>
-              PDeckF
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <main className={styles.main}>
-          { !deck && (
-            <DeckImportForm importFormAction={importFormAction} setDeckName={setDeckName} deckName={deckName} />
-          )}
-
-          { deck && !startPdfFlow && (
-            <DeckContents deck={deck} deckName={deckName} setStartPdfFlow={setStartPdfFlow} />
-          )}
-
-          { startPdfFlow && !pdf?.blob && (
-            <PdfPrepForm deck={deck} generateFormAction={generateFormAction} />
-          )}
-
-          { startPdfFlow && pdf?.blob && !pdf?.error && (
-            <PdfDownloadLink blob={pdf.blob} />
-          )}
-
-          { startPdfFlow && pdf?.error && (
-            <PdfGenerationError error={pdf.error} />
-          )}
-        </main>
+        <Provider store={store}>
+          <Loader />
+          <AppBar position="static">
+            <Toolbar>
+              <Image src="/pdeckf.png" alt="PDeckF Logo" width={40} height={40} />
+              <a href="/" style={{ textDecoration: "none", color: "white" }}>
+                <Typography variant="h6" component="div" sx={{ margin: "0 1rem" }}>
+                  PDeckF
+                </Typography>
+              </a>
+            </Toolbar>
+          </AppBar>
+          <PageContentStateMachine />
+          <Footer />
+        </Provider>
       </LocalizationProvider>
     </ThemeProvider>
   );

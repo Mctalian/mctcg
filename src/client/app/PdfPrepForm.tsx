@@ -2,6 +2,8 @@ import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGrou
 import styles from "./PdfPrepForm.module.css";
 import { useId } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useAppDispatch, useAppSelector } from "./hooks";
+import { setLoading } from "./loadingSlice";
 
 export default function PdfPrepForm({ deck, generateFormAction }) {
   const playerNameId = useId();
@@ -9,10 +11,19 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
   const playerDobId = useId();
   const formatId = useId();
   const formatLabelId = useId();
+
+  const loading = useAppSelector((state) => state.loading.value);
+  const dispatch = useAppDispatch();
+
+  function handleSubmit(e) {
+    dispatch(setLoading(true));
+  }
+
   return (
     <Box
       component={"form"}
       action={generateFormAction}
+      onSubmit={handleSubmit}
       display="flex"
       flexDirection="column"
       gap={2}
@@ -63,7 +74,7 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
 
       <input className={styles.deckInput} type="hidden" name="deck" value={JSON.stringify(deck)}/>
 
-      <Button type="submit" variant="contained">
+      <Button type="submit" variant="contained" disabled={loading}>
         Generate PDF
       </Button>
     </Box>

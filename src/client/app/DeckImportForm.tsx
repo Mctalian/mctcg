@@ -1,12 +1,22 @@
 import { useId } from 'react';
 import styles from './DeckImportForm.module.css';
 import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { setLoading } from './loadingSlice';
 
 export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {
   const deckNameId = useId();
   const deckListId = useId();
   const sortLabelId = useId();
   const sortId = useId();
+
+  const loading = useAppSelector((state) => state.loading.value);
+  const dispatch = useAppDispatch();
+
+  function handleSubmit(e) {
+    dispatch(setLoading(true));
+  }
+
   return (
     <>
       <div className={styles.description}>
@@ -18,6 +28,7 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
         component={"form"}
         action={importFormAction}
         display="flex"
+        onSubmit={handleSubmit}
         flexDirection="column"
         gap={2}
         p={2}
@@ -64,7 +75,7 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
           </Select>
         </FormControl>
 
-        <Button className={styles.formButton} type="submit" variant="contained" fullWidth>
+        <Button className={styles.formButton} type="submit" variant="contained" fullWidth disabled={loading}>
           Import
         </Button>
       </Box>
