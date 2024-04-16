@@ -22,4 +22,5 @@ RUN npm ci --omit=dev
 
 COPY --from=builder --chown=node:node /app/out/src /app
 
-CMD ["node", "/app/index.js"]
+ENTRYPOINT ["node"]
+CMD ["/app/index.js"]
