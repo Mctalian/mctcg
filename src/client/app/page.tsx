@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useFormState } from "react-dom";
-
+import Image from "next/image";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { red, yellow } from "@mui/material/colors";
@@ -16,6 +17,7 @@ import PdfPrepForm from "./PdfPrepForm";
 import PdfDownloadLink from "./PdfDownloadLink";
 import PdfGenerationError from "./PdfGenerationError";
 import { generatePdf, importDecklist } from "./form-state-actions";
+
 
 const darkTheme = createTheme({
   palette: {
@@ -36,6 +38,14 @@ export default function Page() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <AppBar position="static">
+          <Toolbar>
+            <Image src="/pdeckf.png" alt="PDeckF Logo" width={40} height={40} />
+            <Typography variant="h6" component="div" sx={{ margin: "0 1rem" }}>
+              PDeckF
+            </Typography>
+          </Toolbar>
+        </AppBar>
         <main className={styles.main}>
           { !deck && (
             <DeckImportForm importFormAction={importFormAction} setDeckName={setDeckName} deckName={deckName} />
