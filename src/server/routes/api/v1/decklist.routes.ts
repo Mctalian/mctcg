@@ -16,8 +16,8 @@ decklistRouter.post("/generate", async (ctx: ExtendableContext, next) => {
 });
 
 decklistRouter.post("/import", async (ctx: ExtendableContext, next) => {
-  const { decklist } = ctx.request.body as DecklistDto;
-  await new DeckService(ctx).importDeck(decklist);
+  const dto = ctx.request.body as DecklistDto;
+  await new DeckService(ctx).importDeck(dto);
   await next();
 });
 

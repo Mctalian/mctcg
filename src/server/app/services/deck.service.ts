@@ -46,12 +46,12 @@ export class DeckService {
     return true;
   }
 
-  async importDeck(decklist: any) {
+  async importDeck({ decklist, sortType }: DecklistDto) {
     if (!await this.isValidImportRequest(decklist)) {
       return;
     }
     try {
-      const deck = Deck.import(decklist, this.ctx as CacheContext)
+      const deck = await Deck.import(decklist, this.ctx as CacheContext, sortType)
       this.ctx.status = 200;
       const deckDto = { 
         [Section.Pokemon]: deck[Section.Pokemon],
@@ -113,7 +113,7 @@ export class DeckService {
     if (isSectionedDeck(dto)) {
       return new Deck(this.ctx as CacheContext, dto);
     } else if (dto.decklist) {
-      return Deck.import(dto.decklist, this.ctx as CacheContext);
+      return await Deck.import(dto.decklist, this.ctx as CacheContext, dto.sortType);
     } else {
       this.ctx.status = 400;
       this.ctx.body = "Invalid request";

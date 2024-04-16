@@ -7,6 +7,8 @@ import { logger } from "../../utils/index.js";
 import { Format } from "../pdf-exporter/format.enum.js";
 import { ValidationErrorsAggregate } from "./validation-errors-aggregate.interface.js";
 import { CacheContext } from "../../shared/cache-context.interface.js";
+import { SortType } from "./sort-type.enum.js";
+import { compareAsc } from "date-fns";
 
 export class Deck implements SectionedDeck {
   [Section.Pokemon]: Card[] = [];
@@ -37,7 +39,7 @@ export class Deck implements SectionedDeck {
       this[Section.Energy].reduce((acc, card) => acc + card.quantity, 0);
   }
 
-  static import(data: string, cacheContext: CacheContext): Deck {
+  static async import(data: string, cacheContext: CacheContext, sortType: SortType = SortType.Alphabetical): Promise<Deck> {
     if (!data || data.trim() === '') {
       throw new Error('No decklist provided');
     }
@@ -96,6 +98,7 @@ export class Deck implements SectionedDeck {
     deckList[Section.Trainer] = deck[Section.Trainer];
     deckList[Section.Energy] = deck[Section.Energy];
     deckList.mergeDuplicateLines();
+    await deckList.sortSections(sortType);
     logger.debug(`Deck imported.`);
     return deckList;
   }
@@ -195,4 +198,76 @@ export class Deck implements SectionedDeck {
     logger.debug(`Merged duplicate lines. ${this[Section.Pokemon].length} Pokemon lines, ${this[Section.Trainer].length} Trainer lines, ${this[Section.Energy].length} Energy lines`);
   }
 
+  async sortSections(type: SortType) {
+    logger.debug(`Sorting deck: ${SortType[type]}`)
+    switch (type) {
+      case SortType.Alphabetical:
+        this.sortSectionsByName();
+        break;
+      case SortType.SetAlphabetical:
+        this.sortSectionBySetName();
+        break;
+      case SortType.SetChronological:
+        await this.sortSectionBySetReleaseDate();
+        break;
+      case SortType.Quantity:
+        this.sortSectionsByQuantity();
+        break;
+      default:
+        this.sortSectionsByName();
+        break;
+    }
+  }
+
+  private sortSectionsByName() {
+    this[Section.Pokemon].sort((a, b) => a.name.localeCompare(b.name));
+    this[Section.Trainer].sort((a, b) => a.name.localeCompare(b.name));
+    this[Section.Energy].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  private sortSectionBySetName() {
+    function sortBySetNameAndNumber(a, b) {
+      if (a.setAbbr === b.setAbbr) {
+        return a.setNumber - b.setNumber;
+      }
+      return a.setAbbr.localeCompare(b.setAbbr);
+    }
+    this[Section.Pokemon].sort(sortBySetNameAndNumber);
+    this[Section.Trainer].sort(sortBySetNameAndNumber);
+    this[Section.Energy].sort(sortBySetNameAndNumber);
+  }
+
+  private async sortSectionBySetReleaseDate() {
+    const sets = new Set<string>();
+    this[Section.Pokemon].forEach(card => sets.add(card.setAbbr));
+    this[Section.Trainer].forEach(card => sets.add(card.setAbbr));
+    this[Section.Energy].forEach(card => sets.add(card.setAbbr));
+    const setList = Array.from(sets);
+    const cachedSets = await this.cacheContext.setsCache.getSets();
+    const setListByReleaseDate = setList.sort((a, b) => {
+      const setA = cachedSets.find(set => set.ptcgoCode === a);
+      const setB = cachedSets.find(set => set.ptcgoCode === b);
+      if (!setA || !setB) {
+        return 0;
+      }
+      return compareAsc(setA.releaseDate, setB.releaseDate);
+    });
+    function sortBySetReleaseDateAndNumber(a, b) {
+      const releaseDateIndexA = setListByReleaseDate.indexOf(a.setAbbr);
+      const releaseDateIndexB = setListByReleaseDate.indexOf(b.setAbbr);
+      if (releaseDateIndexA === releaseDateIndexB) {
+        return a.setNumber - b.setNumber;
+      }
+      return releaseDateIndexA - releaseDateIndexB;
+    }
+    this[Section.Pokemon].sort(sortBySetReleaseDateAndNumber);
+    this[Section.Trainer].sort(sortBySetReleaseDateAndNumber);
+    this[Section.Energy].sort(sortBySetReleaseDateAndNumber);
+  }
+
+  private sortSectionsByQuantity() {
+    this[Section.Pokemon].sort((a, b) => b.quantity - a.quantity);
+    this[Section.Trainer].sort((a, b) => b.quantity - a.quantity);
+    this[Section.Energy].sort((a, b) => b.quantity - a.quantity);
+  }
 }
