@@ -3,7 +3,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import Image from "next/image";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { red, yellow } from "@mui/material/colors";
@@ -33,11 +33,8 @@ export default function Page() {
           <Loader />
           <AppBar position="static">
             <Toolbar>
-              <Image src="/pdeckf.png" alt="PDeckF Logo" width={40} height={40} />
               <a href="/" style={{ textDecoration: "none", color: "white" }}>
-                <Typography variant="h6" component="div" sx={{ margin: "0 1rem" }}>
-                  PDeckF
-                </Typography>
+                <Image src="/mctcg_white_transparent.png" alt="McTCG Logo" width={70} height={40} style={{ margin: "0 4px"}} />
               </a>
             </Toolbar>
           </AppBar>
