@@ -33,6 +33,10 @@ export class CardValidator {
     const set = sets.find(s => s.ptcgoCode === this.card.setAbbr);
     logger.debug(`Validating set abbreviation: ${this.card.setAbbr}`);
     if (!set) {
+      if (this.card.setAbbr === "Energy") {
+        logger.warning("PTG Live non-set Energy card detected");
+        return;
+      }
       logger.error("Invalid set abbreviation: " + this.card.setAbbr);
       if (!this.card.errors) {
         this.card.errors = [];

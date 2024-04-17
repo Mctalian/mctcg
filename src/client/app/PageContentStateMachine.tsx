@@ -29,12 +29,18 @@ export default function PageContentStateMachine() {
       return <DeckContents deck={deck} deckName={deckName} setStartPdfFlow={setStartPdfFlow} />;
     } else {
       if (!pdf?.blob) {
+        if (pdf?.error) {
+          dispatch(setLoading(false));
+          return <PdfGenerationError error={pdf.error} />;
+        }
         return <PdfPrepForm deck={deck} generateFormAction={generateFormAction} />;
-      } else if (pdf?.blob && !pdf?.error) {
-        dispatch(setLoading(false));
-        return <PdfDownloadLink blob={pdf.blob} />;
       } else {
-        return <PdfGenerationError error={pdf.error} />;
+        dispatch(setLoading(false));
+        if (pdf?.error) {
+          return <PdfGenerationError error={pdf.error} />;
+        } else {
+          return <PdfDownloadLink blob={pdf.blob} />;
+        }
       }
     }
   }

@@ -26,5 +26,6 @@ export function isSingularityCard(card: Card): card is SingularityCard {
 }
 
 export function isBasicEnergy(card: Card): card is BasicEnergyCard {
-  return !!card.subtypes?.includes("Basic") && card.supertype === "Energy";
+  return (!!card.subtypes?.includes("Basic") && card.supertype === "Energy") || 
+    (card.name.includes("Basic") && card.name.includes("Energy"));
 }

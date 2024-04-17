@@ -52,7 +52,7 @@ export async function generatePdf(_prevState, queryData) {
     console.error(response.statusText);
     return {
       blob: null,
-      error: response.body,
+      error: await response.text(),
     };
   }
   const blob = await response.blob();
