@@ -1,8 +1,8 @@
 import { useId } from 'react';
 import styles from './DeckImportForm.module.css';
 import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
-import { useAppDispatch, useAppSelector } from './hooks';
-import { setLoading } from './loadingSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setLoading } from '../store/loadingSlice';
 import { sendGAEvent } from '@next/third-parties/google';
 
 export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {

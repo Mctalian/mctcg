@@ -2,8 +2,8 @@ import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGrou
 import styles from "./PdfPrepForm.module.css";
 import { useId } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useAppDispatch, useAppSelector } from "./hooks";
-import { setLoading } from "./loadingSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { setLoading } from "../store/loadingSlice";
 import { sendGAEvent } from "@next/third-parties/google";
 
 export default function PdfPrepForm({ deck, generateFormAction }) {

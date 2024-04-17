@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from "@mui/material";
-import { useAppSelector } from "./hooks";
+import { useAppSelector } from "../store/hooks";
 
 export default function Loader() {
   const loading = useAppSelector((state) => state.loading.value);

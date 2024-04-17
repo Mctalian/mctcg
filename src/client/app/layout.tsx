@@ -7,8 +7,8 @@ import "./globals.css";
 const roboto = Roboto({ weight: ["300", "400", "500", "700"], subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: "PDeckF",
-  description: "Generate your Pokémon TCG Live decklists as Official PDFs",
+  title: "McTCG",
+  description: "A suite of tools for Pokemon TCG players and collectors.",
 };
 
 export default function RootLayout({
@@ -18,6 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" type="image/vnd.microsoft.icon"
+            sizes="32x32 48x48" href="favicon.ico" />
+
+        <link rel="icon" sizes="128x128" href="favicon.icns" />
+
+        <link rel="icon" href="favicon.png" type="image/x-icon" />
+      </head>
       <body className={roboto.className}>
         {children}
       </body>

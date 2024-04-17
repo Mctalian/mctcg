@@ -1,47 +1,54 @@
 "use client";
 
-import React from "react";
-import { Provider } from "react-redux";
-import Image from "next/image";
-import { AppBar, Toolbar } from "@mui/material";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { red, yellow } from "@mui/material/colors";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { useState } from "react";
+import { useFormState } from "react-dom";
 
-import { store } from "./store";
-import PageContentStateMachine from "./PageContentStateMachine";
-import Loader from "./Loader";
-import Footer from "./Footer";
+import { importDecklist, generatePdf } from "./components/form-state-actions";
+import { useAppDispatch } from "./store/hooks";
+import DeckContents from "./components/DeckContents";
+import DeckImportForm from "./components/DeckImportForm";
+import PdfPrepForm from "./components/PdfPrepForm";
+import PdfDownloadLink from "./components/PdfDownloadLink";
+import PdfGenerationError from "./components/PdfGenerationError";
+import { setLoading } from "./store/loadingSlice";
 
-
-const darkTheme = createTheme({
-  palette: {
-    primary: red,
-    secondary: yellow,
-    mode: 'dark',
-  },
-});
 
 export default function Page() {
+  const [deck, importFormAction] = useFormState(importDecklist, null);
+  const [pdf, generateFormAction] = useFormState(generatePdf, { blob: null, error: null });
+
+  const [startPdfFlow, setStartPdfFlow] = useState(false);
+  const [deckName, setDeckName] = useState(`Deck ${new Date().toISOString()}`);
+
+  const dispatch = useAppDispatch();
+
+  function pageState() {
+    if (!deck) {
+      return <DeckImportForm importFormAction={importFormAction} setDeckName={setDeckName} deckName={deckName} />;
+    } else if (!startPdfFlow) {
+      dispatch(setLoading(false));
+      return <DeckContents deck={deck} deckName={deckName} setStartPdfFlow={setStartPdfFlow} />;
+    } else {
+      if (!pdf?.blob) {
+        if (pdf?.error) {
+          dispatch(setLoading(false));
+          return <PdfGenerationError error={pdf.error} />;
+        }
+        return <PdfPrepForm deck={deck} generateFormAction={generateFormAction} />;
+      } else {
+        dispatch(setLoading(false));
+        if (pdf?.error) {
+          return <PdfGenerationError error={pdf.error} />;
+        } else {
+          return <PdfDownloadLink blob={pdf.blob} />;
+        }
+      }
+    }
+  }
+
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Provider store={store}>
-          <Loader />
-          <AppBar position="static">
-            <Toolbar>
-              <a href="/" style={{ textDecoration: "none", color: "white" }}>
-                <Image src="/mctcg_white_transparent.png" alt="McTCG Logo" width={70} height={40} style={{ margin: "0 4px"}} />
-              </a>
-            </Toolbar>
-          </AppBar>
-          <PageContentStateMachine />
-          <Footer />
-        </Provider>
-      </LocalizationProvider>
-    </ThemeProvider>
+    <>
+      {pageState()}
+    </>
   );
 }
