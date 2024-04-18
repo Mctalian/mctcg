@@ -1,0 +1,20 @@
+.logo {
+  margin: 0.5rem 0;
+}
+
+.header {
+  margin: 0.5rem 0;
+}
+
+.section {
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.section p {
+  padding: 0.5rem;
+}
+
+.section p a {
+  font-weight: bold;
+}

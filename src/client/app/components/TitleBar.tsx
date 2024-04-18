@@ -4,7 +4,10 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function TitleBar() {
-  const pages = [];
+  const pages = [{
+    name: "Deck PDF",
+    href: "/deck-pdf",
+  }];
   const drawerWidth = 240;
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -19,9 +22,9 @@ export default function TitleBar() {
       <Divider />
       <List>
         {pages.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
+          <ListItem key={item.name} disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }} href={item.href}>
+              <ListItemText primary={item.name} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -48,8 +51,8 @@ export default function TitleBar() {
           </Box>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {pages.map((item) => (
-              <Button key={item} sx={{ color: '#fff' }}>
-                {item}
+              <Button key={item.name} sx={{ color: '#fff' }} href={item.href}>
+                {item.name}
               </Button>
             ))}
           </Box>

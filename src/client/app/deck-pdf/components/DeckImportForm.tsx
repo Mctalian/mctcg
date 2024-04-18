@@ -1,11 +1,25 @@
-import { useId } from 'react';
-import styles from './DeckImportForm.module.css';
-import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setLoading } from '../store/loadingSlice';
-import { sendGAEvent } from '@next/third-parties/google';
+"use client"
 
-export default function DeckImportForm({ importFormAction, setDeckName, deckName }) {
+import { useId } from 'react';
+import { sendGAEvent } from '@next/third-parties/google';
+import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from '@mui/material';
+import styles from './DeckImportForm.module.css';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setLoading } from '../../store/loadingSlice';
+import { setDeck } from '../../store/deckSlice';
+import { useRouter } from 'next/navigation';
+
+interface DeckFormFieldValue {
+  value: string
+}
+
+interface DeckFormFields extends EventTarget {
+  deckName: DeckFormFieldValue;
+  decklist: DeckFormFieldValue;
+  sortType: DeckFormFieldValue;
+}
+
+export default function DeckImportForm({ deckName }) {
   const deckNameId = useId();
   const deckListId = useId();
   const sortLabelId = useId();
@@ -13,9 +27,35 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
 
   const loading = useAppSelector((state) => state.loading.value);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     dispatch(setLoading(true));
+    sendGAEvent({ event: "buttonClicked", value: "decklistImport"})
+    const target = e.target as DeckFormFields;
+    const decklist = target.decklist.value;
+    const sortType = target.sortType.value;
+    const response = await fetch("/api/v1/decklist/import", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ decklist, sortType }),
+    });
+    if (response.status !== 200) {
+      dispatch(setLoading(false));
+      alert("Error importing decklist");
+      return;
+    } else {
+      const deck = await response.json();
+      dispatch(setDeck({
+        deck: deck,
+        name: deckName,
+        sortType: sortType
+      }));
+      router.push('/deck-pdf/import-success');
+    }
   }
 
   return (
@@ -27,7 +67,6 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
       </div>
       <Box
         component={"form"}
-        action={importFormAction}
         display="flex"
         onSubmit={handleSubmit}
         flexDirection="column"
@@ -46,7 +85,6 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
           required
           fullWidth
           value={deckName}
-          onChange={(e) => setDeckName(e.target.value)}
         />
         
 
@@ -77,12 +115,10 @@ export default function DeckImportForm({ importFormAction, setDeckName, deckName
         </FormControl>
 
         <Button
-          className={styles.formButton}
           type="submit"
           variant="contained"
           fullWidth
           disabled={loading}
-          onClick={() => sendGAEvent({ event: "buttonClicked", value: "decklistImport"})}
         >
           Import
         </Button>

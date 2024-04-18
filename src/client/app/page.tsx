@@ -1,54 +1,17 @@
-"use client";
-
-import { useState } from "react";
-import { useFormState } from "react-dom";
-
-import { importDecklist, generatePdf } from "./components/form-state-actions";
-import { useAppDispatch } from "./store/hooks";
-import DeckContents from "./components/DeckContents";
-import DeckImportForm from "./components/DeckImportForm";
-import PdfPrepForm from "./components/PdfPrepForm";
-import PdfDownloadLink from "./components/PdfDownloadLink";
-import PdfGenerationError from "./components/PdfGenerationError";
-import { setLoading } from "./store/loadingSlice";
-
+import Image from 'next/image';
+import styles from "./page.module.css";
 
 export default function Page() {
-  const [deck, importFormAction] = useFormState(importDecklist, null);
-  const [pdf, generateFormAction] = useFormState(generatePdf, { blob: null, error: null });
-
-  const [startPdfFlow, setStartPdfFlow] = useState(false);
-  const [deckName, setDeckName] = useState(`Deck ${new Date().toISOString()}`);
-
-  const dispatch = useAppDispatch();
-
-  function pageState() {
-    if (!deck) {
-      return <DeckImportForm importFormAction={importFormAction} setDeckName={setDeckName} deckName={deckName} />;
-    } else if (!startPdfFlow) {
-      dispatch(setLoading(false));
-      return <DeckContents deck={deck} deckName={deckName} setStartPdfFlow={setStartPdfFlow} />;
-    } else {
-      if (!pdf?.blob) {
-        if (pdf?.error) {
-          dispatch(setLoading(false));
-          return <PdfGenerationError error={pdf.error} />;
-        }
-        return <PdfPrepForm deck={deck} generateFormAction={generateFormAction} />;
-      } else {
-        dispatch(setLoading(false));
-        if (pdf?.error) {
-          return <PdfGenerationError error={pdf.error} />;
-        } else {
-          return <PdfDownloadLink blob={pdf.blob} />;
-        }
-      }
-    }
-  }
 
   return (
     <>
-      {pageState()}
+      <Image className={styles.logo} src="/mctcg_gold_transparent.png" alt="McTCG" width={300} height={170} />
+      <h1 className={styles.header}>Welcome to McTCG</h1>
+      <section className={styles.section}>
+        <p>As a fan of the <a href="https://www.pokemon.com/us/pokemon-tcg" target='_blank'>Pokemon Trading Card Game</a>, I wanted to create some tools that I thought would be useful for collectors and players.</p>
+        <p><a href="/deck-pdf">Deck PDF</a> is the first of these tools, hoping to make decklists for tournaments simple and consistent.</p>
+        <p>Please give it a shot. I hope you find it useful!</p>
+      </section>
     </>
   );
 }

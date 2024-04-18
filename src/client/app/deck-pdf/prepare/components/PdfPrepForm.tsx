@@ -1,12 +1,23 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Select, TextField } from "@mui/material";
-import styles from "./PdfPrepForm.module.css";
-import { useId } from "react";
-import { DatePicker } from "@mui/x-date-pickers";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { setLoading } from "../store/loadingSlice";
-import { sendGAEvent } from "@next/third-parties/google";
+"use client"
 
-export default function PdfPrepForm({ deck, generateFormAction }) {
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Select, TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import { sendGAEvent } from "@next/third-parties/google";
+import { isValid } from "date-fns";
+import { useId } from "react";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { setLoading } from "../../../store/loadingSlice";
+import { setPdf } from "../../../store/pdfSlice";
+import { useRouter } from "next/navigation";
+
+interface PdfPrepFormFields extends EventTarget {
+  playerName: HTMLInputElement;
+  playerId: HTMLInputElement;
+  playerDob: HTMLInputElement;
+  format: HTMLInputElement;
+}
+
+export default function PdfPrepForm() {
   const playerNameId = useId();
   const playerIdId = useId();
   const playerDobId = useId();
@@ -14,16 +25,67 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
   const formatLabelId = useId();
 
   const loading = useAppSelector((state) => state.loading.value);
+  const { deck } = useAppSelector((state) => state.deck);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
+    e.preventDefault();
     dispatch(setLoading(true));
+    const target = e.target as PdfPrepFormFields;
+    const playerName = target.playerName.value;
+    const playerId = target.playerId.value;
+    const playerDob = target.playerDob.value;
+    const format = target.format.value;
+  
+    if (!playerName || !playerId || !playerDob || !format || !deck) {
+      return {
+        blob: null,
+        error: "Missing required fields",
+      };
+    }
+
+    if (!isValid(new Date(playerDob))) {
+      return {
+        blob: null,
+        error: "Invalid date of birth",
+      };
+    }
+
+    const dto = {
+      playerName,
+      playerId,
+      playerDob,
+      format,
+      ...deck,
+    };
+    const response = await fetch("/api/v1/deck/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dto),
+    });
+    if (response.status !== 200) {
+      console.error(response.statusText);
+      dispatch(setPdf({
+        blob: null,
+        error: await response.text(),
+      }));
+      router.push("/deck-pdf/error");
+    } else {
+      const blob = await response.blob();
+      dispatch(setPdf({
+        blob,
+        error: null
+      }));
+      router.push("/deck-pdf/success");
+    }
   }
 
   return (
     <Box
       component={"form"}
-      action={generateFormAction}
       onSubmit={handleSubmit}
       display="flex"
       flexDirection="column"
@@ -64,6 +126,7 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
       <FormControl required>
         <FormLabel id={formatLabelId}>Format</FormLabel>
         <RadioGroup
+          id={formatId}
           aria-labelledby={formatLabelId}
           name="format"
           defaultValue={"standard"}
@@ -72,8 +135,6 @@ export default function PdfPrepForm({ deck, generateFormAction }) {
           <FormControlLabel value="expanded" control={<Radio />} label="Expanded" />
         </RadioGroup>
       </FormControl>
-
-      <input className={styles.deckInput} type="hidden" name="deck" value={JSON.stringify(deck)}/>
 
       <Button
         type="submit"

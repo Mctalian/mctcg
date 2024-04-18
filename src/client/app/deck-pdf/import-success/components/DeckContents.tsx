@@ -1,8 +1,18 @@
-import { Box, Button, List } from "@mui/material";
-import CardSection from "./CardSection";
-import { sendGAEvent } from "@next/third-parties/google";
+"use client"
 
-export default function DeckContents({ deck, deckName, setStartPdfFlow }) {
+import { Box, Button, List } from "@mui/material";
+import { sendGAEvent } from "@next/third-parties/google";
+import { useRouter } from 'next/navigation'
+import CardSection from "./CardSection";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { setLoading } from "../../../store/loadingSlice";
+
+export default function DeckContents() {
+  const router = useRouter();
+  const { deck, name: deckName } = useAppSelector((state) => state.deck);
+  const dispatch = useAppDispatch();
+  dispatch(setLoading(false));
+
   return (
     <Box
       display="flex"
@@ -28,8 +38,9 @@ export default function DeckContents({ deck, deckName, setStartPdfFlow }) {
       </List>
       <Button
         onClick={(e) => {
-          setStartPdfFlow(true);
+          e.preventDefault();
           sendGAEvent({ event: "buttonClicked", value: "startPdfGenerate"})
+          router.push('/deck-pdf/prepare');
         }}
         variant="contained"
       >Generate PDF</Button>
