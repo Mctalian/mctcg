@@ -1,6 +1,9 @@
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import theme from '../theme';
 
 import "./globals.css";
 
@@ -18,16 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" type="image/vnd.microsoft.icon"
-            sizes="32x32 48x48" href="favicon.ico" />
-
-        <link rel="icon" sizes="128x128" href="favicon.icns" />
-
-        <link rel="icon" href="favicon.png" type="image/x-icon" />
-      </head>
       <body className={roboto.className}>
-        {children}
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
       <GoogleAnalytics gaId="G-PVN3072TQ6" />
     </html>

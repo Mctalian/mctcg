@@ -8,6 +8,8 @@ RUN npm ci
 
 COPY --link .swcrc build.sh ./
 COPY --link src ./src
+ENV NODE_ENV=production
+ENV IS_PROD=true
 RUN npm run build
 
 FROM node:20.11.1-alpine3.19 as deploy
