@@ -1,15 +1,18 @@
 import { PDFDocument, PDFForm, PDFPage, RotationTypes, rgb } from "pdf-lib";
+import path from "node:path";
 import { access, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { differenceInCalendarYears, getDate, getMonth, getYear } from "date-fns";
 import { SectionedDeck } from "../decks/sectioned-deck.interface.js";
 import { logger } from "../../utils/index.js";
 import { Format } from "./format.enum.js";
 
+const __dirname = import.meta.dirname;
+
 const FORM_URL = "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/play-pokemon/rules/play-pokemon-deck-list-85x11-tef.pdf"
 const LOCAL_FORM_PATH = "pdfs/blank-reg-raw.pdf";
 const NAME_FIELD = "Player Name";
 const DEFAULT_FILE_NAME = "out/filled-form.pdf";
-const PNG_LOGO_PATH = "src/client/public/mctcg_black_transparent.png";
+const PNG_LOGO_PATH = path.join(__dirname, "../../../", "client/public/mctcg_black_transparent.png");
 const HEADER_TEXT_HEIGHT = 16;
 const OFFSET_FORMAT_Y = 62;
 const OFFSET_HEADER_Y = 81;

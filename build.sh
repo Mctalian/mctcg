@@ -13,4 +13,6 @@ npx next build
 mkdir -p ../../out/src/client
 cp -r .next ../../out/src/client/
 
+cp -r public ../../out/src/client/
+
 

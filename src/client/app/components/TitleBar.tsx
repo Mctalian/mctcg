@@ -2,6 +2,7 @@ import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListI
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from "next/image";
 import { useState } from "react";
+import logo from "./mctcg_white_transparent.png";
 
 export default function TitleBar() {
   const pages = [{
@@ -17,7 +18,7 @@ export default function TitleBar() {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Button href="/" sx={{ textDecoration: "none", color: "white" }} variant="text">
-        <Image src="/mctcg_white_transparent.png" alt="McTCG Logo" width={70} height={40} style={{ margin: "0 4px"}} />
+        <Image src={logo} alt="McTCG Logo" width={70} height={40} style={{ margin: "0 4px"}} />
       </Button>
       <Divider />
       <List>
@@ -46,7 +47,7 @@ export default function TitleBar() {
           </IconButton>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
             <Button href="/" sx={{ textDecoration: "none", color: "white" }} variant="text">
-              <Image src="/mctcg_white_transparent.png" alt="McTCG Logo" width={70} height={40} style={{ margin: "0 4px"}} />
+              <Image src={logo} alt="McTCG Logo" width={70} height={40} style={{ margin: "0 4px"}} />
             </Button>
           </Box>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
