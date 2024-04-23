@@ -23,6 +23,7 @@ interface DeckState {
     Energy: Card[];
     errors?: string[];
     warnings?: string[];
+    format?: "Standard" | "Expanded" | "Unlimited"
   },
   sortType: string;
 }
@@ -41,12 +42,15 @@ export const deckSlice = createSlice({
       state.deck = action.payload.deck;
       state.name = action.payload.name;
       state.sortType = action.payload.sortType;
+    },
+    setDeckName: (state, action: PayloadAction<string>) => {
+      state.name = action.payload
     }
   }
 });
 
 export const initialDeckState = initialState;
 
-export const { setDeck } = deckSlice.actions;
+export const { setDeck, setDeckName } = deckSlice.actions;
 
 export default deckSlice.reducer;
