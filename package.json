@@ -44,6 +44,7 @@
   "scripts": {
     "debug": "LOG_LEVEL=debug nodemon --inspect src/index.ts",
     "start": "node --import @swc-node/register/esm-register src/index.ts",
+    "db:start": "docker compose up",
     "build": "./build.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
