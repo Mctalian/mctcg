@@ -29,7 +29,7 @@ interface DeckState {
 }
 
 const initialState: DeckState = {
-  name: `Deck ${new Date().toISOString()}`,
+  name: `Deck ${crypto.randomUUID()}`,
   deck: null,
   sortType: ""
 };

@@ -3,12 +3,13 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { sendGAEvent } from "@next/third-parties/google";
-import { isValid } from "date-fns";
+import { format, isValid } from "date-fns";
 import { useId } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { setLoading } from "../../../store/loadingSlice";
 import { setPdf } from "../../../store/pdfSlice";
 import { useRouter } from "next/navigation";
+import { setPlayerDob, setPlayerId, setPlayerName } from "../../../store/playerInfoSlice";
 
 interface PdfPrepFormFields extends EventTarget {
   playerName: HTMLInputElement;
@@ -26,6 +27,7 @@ export default function PdfPrepForm() {
 
   const loading = useAppSelector((state) => state.loading.value);
   const { deck } = useAppSelector((state) => state.deck);
+  const { playerName, playerId, playerDob } = useAppSelector((state) => state.playerInfo);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -33,9 +35,6 @@ export default function PdfPrepForm() {
     e.preventDefault();
     dispatch(setLoading(true));
     const target = e.target as PdfPrepFormFields;
-    const playerName = target.playerName.value;
-    const playerId = target.playerId.value;
-    const playerDob = target.playerDob.value;
     const format = target.format.value;
   
     if (!playerName || !playerId || !playerDob || !format || !deck) {
@@ -102,6 +101,8 @@ export default function PdfPrepForm() {
         variant="filled"
         required
         fullWidth
+        value={playerName}
+        onChange={(e) => dispatch(setPlayerName(e.target.value))}
       />
      
       <TextField
@@ -111,6 +112,8 @@ export default function PdfPrepForm() {
         variant="filled"
         required
         fullWidth
+        value={playerId}
+        onChange={(e) => dispatch(setPlayerId(e.target.value))}
       />
 
       <FormControl 
@@ -120,6 +123,8 @@ export default function PdfPrepForm() {
         <DatePicker
           name="playerDob"
           disableFuture
+          value={new Date(playerDob)}
+          onChange={(e) => isValid(e) && dispatch(setPlayerDob(format(e, "MM/dd/yyyy")))}
         />
       </FormControl>
 

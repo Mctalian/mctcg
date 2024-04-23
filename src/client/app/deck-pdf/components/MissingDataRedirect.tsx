@@ -11,9 +11,11 @@ export default function MissingDataRedirect({ dataReady: dataToCheck, children }
     !!dataToCheck;
 
   if (!dataReady) {
-    timeout = setTimeout(() => {
-      router.push('/deck-pdf');
-    }, 4000);
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        router.push('/deck-pdf');
+      }, 4000);
+    }
     return (
       <Box>
         <h2>Required data not found</h2>
@@ -25,6 +27,7 @@ export default function MissingDataRedirect({ dataReady: dataToCheck, children }
   }
 
   clearTimeout(timeout);
+  timeout = null;
 
   return (
     <>{children}</>
