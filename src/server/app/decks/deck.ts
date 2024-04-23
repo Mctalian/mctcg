@@ -19,6 +19,7 @@ export class Deck implements SectionedDeck {
   pokemonErrors: string[] = [];
   trainerErrors: string[] = [];
   energyErrors: string[] = [];
+  format?: Format;
   private readonly deckValidator: DeckValidator;
 
   constructor(
@@ -100,10 +101,11 @@ export class Deck implements SectionedDeck {
     deckList.mergeDuplicateLines();
     await deckList.sortSections(sortType);
     logger.debug(`Deck imported.`);
+    await deckList.isValid();
     return deckList;
   }
 
-  async isValid(format: Format): Promise<boolean> {
+  async isValid(format?: Format): Promise<boolean> {
     await this.deckValidator.validate(format);
     logger.debug(`Checking for validation errors...`);
     this.pokemonErrors = this[Section.Pokemon].filter(card => card.errors && card.errors.length > 0).reduce((acc, card) => acc.concat(card.errors!), [] as string[]);

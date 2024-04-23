@@ -2,6 +2,7 @@ import { Card, isBasicEnergy } from "./card.interface.js";
 import { logger } from "../../utils/index.js";
 import { Singularity } from "./singularity.enum.js";
 import { CacheContext } from "../../shared/cache-context.interface.js";
+import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 
 export enum CardValidationError {
   UnknownCard = "Unknown card based on set abbreviation and number",
@@ -66,6 +67,7 @@ export class CardValidator {
       }
       this.card.errors.push(`${CardValidationError.UnknownCard}: ${this.card.setAbbr}-${this.card.setNumber} (${this.card.name})`);
     } else {
+      this.card.id = cardInfo.id;
       this.card.name = cardInfo.name;
       this.card.supertype = cardInfo.supertype;
       this.card.subtypes = cardInfo.subtypes;
@@ -81,6 +83,20 @@ export class CardValidator {
           }
         }
       }
+    }
+  }
+
+  private processImageField(cardInfo: PokemonTCG.Card) {
+    
+    if (!cardInfo.images) {
+      return;
+    }
+    this.card.images = this.card.images || {};
+    if (cardInfo.images.small) {
+      this.card.images.small = cardInfo.images.small;
+    }
+    if (cardInfo.images.large) {
+      this.card.images.large = cardInfo.images.large;
     }
   }
   

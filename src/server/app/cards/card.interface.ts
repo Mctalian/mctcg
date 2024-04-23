@@ -1,10 +1,15 @@
 import { Singularity } from "./singularity.enum.js";
 
 export interface Card {
+  id?: string;
   quantity: number;
   name: string;
   setAbbr: string;
   setNumber: string;
+  images?: {
+    small?: string;
+    large?: string;
+  }
   regCode?: string;
   singularityType?: Singularity;
   supertype?: string;

@@ -33,14 +33,14 @@ export class DeckValidator {
   ) {
   }
 
-  async validate(format: Format) {
+  async validate(format?: Format) {
     this.validateNumberOfCards();
     const cards = this.deck.Pokemon.concat(this.deck.Trainer).concat(this.deck.Energy);
     await Promise.all([
       ...cards.map(card => new CardValidator(card, this.cacheContext).validate()),
     ]);
     this.validateNumberOfCardsByName();
-    this.validateRegulations(format);
+    this.validateRegulations();
     this.validateSingularityRules();
     this.validateBasicPokemon();
     return;
@@ -78,27 +78,28 @@ export class DeckValidator {
     }
   }
 
-  private validateRegulations(format: Format) {
-    if (format === Format.Standard) {
-      const cards = this.deck.Pokemon.concat(this.deck.Trainer).concat(this.deck.Energy);
-      const missingRegCodes = cards.filter(card => !isBasicEnergy(card)).filter(card => !card.regCode);
-      if (missingRegCodes.length > 0) {
-        logger.warn(`Missing regulation codes for ${missingRegCodes.length} cards`);
-        logger.warn(`Missing cards: ${missingRegCodes.map(card => `${card.name} (${card.setAbbr}-${card.setNumber})`).join(", ")}`);
-        if (!this.deck.warnings) {
-          this.deck.warnings = [];
-        }
-        this.deck.warnings.push(`${DeckValidationWarning.MissingRegulation}: ${missingRegCodes.map(card => `${card.name} (${card.setAbbr}-${card.setNumber})`).join(", ")}`);
+  private validateRegulations() {
+    const cards = this.deck.Pokemon.concat(this.deck.Trainer).concat(this.deck.Energy);
+    const missingRegCodes = cards.filter(card => !isBasicEnergy(card)).filter(card => !card.regCode);
+    if (missingRegCodes.length > 0) {
+      logger.warn(`Missing regulation codes for ${missingRegCodes.length} cards`);
+      logger.warn(`Missing cards: ${missingRegCodes.map(card => `${card.name} (${card.setAbbr}-${card.setNumber})`).join(", ")}`);
+      if (!this.deck.warnings) {
+        this.deck.warnings = [];
       }
-      const invalidCards = cards.filter(card => card.regCode).filter(card => !CURRENT_STANDARD_REGULATIONS.includes(card.regCode!));
-      if (invalidCards.length > 0) {
-        logger.error("Deck contains cards that are not legal in the current standard format");
-        logger.error("Invalid cards: " + invalidCards.map(card => `${card.name} (${card.setAbbr}-${card.setNumber}) REG: ${card.regCode}`).join(", "));
-        if (!this.deck.errors) {
-          this.deck.errors = [];
-        }
-        this.deck.errors.push(`${DeckValidationError.InvalidRegulation}: ${invalidCards.map(card => `${card.name} (${card.setAbbr}-${card.setNumber}) REG: ${card.regCode}`).join(", ")}`);
-      }
+      this.deck.warnings.push(`${DeckValidationWarning.MissingRegulation}: ${missingRegCodes.map(card => `${card.name} (${card.setAbbr}-${card.setNumber})`).join(", ")}`);
+    }
+    const invalidCards = cards.filter(card => card.regCode).filter(card => !CURRENT_STANDARD_REGULATIONS.includes(card.regCode!));
+    if (invalidCards.length > 0) {
+      this.deck.format = Format.Expanded
+      // logger.error("Deck contains cards that are not legal in the current standard format");
+      // logger.error("Invalid cards: " + invalidCards.map(card => `${card.name} (${card.setAbbr}-${card.setNumber}) REG: ${card.regCode}`).join(", "));
+      // if (!this.deck.errors) {
+      //   this.deck.errors = [];
+      // }
+      // this.deck.errors.push(`${DeckValidationError.InvalidRegulation}: ${invalidCards.map(card => `${card.name} (${card.setAbbr}-${card.setNumber}) REG: ${card.regCode}`).join(", ")}`);
+    } else {
+      this.deck.format = Format.Standard
     }
   }
 

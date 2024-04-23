@@ -61,10 +61,13 @@ export class DeckService {
     try {
       const deck = await Deck.import(decklist, this.ctx as CacheContext, sortType)
       this.ctx.status = 200;
-      const deckDto = { 
+      const deckDto: DeckDto = { 
         [Section.Pokemon]: deck[Section.Pokemon],
         [Section.Trainer]: deck[Section.Trainer],
         [Section.Energy]: deck[Section.Energy],
+        errors: deck.errors,
+        warnings: deck.warnings,
+        format: deck.format || Format.Expanded
       }
       this.ctx.body = deckDto;
     } catch (err) {

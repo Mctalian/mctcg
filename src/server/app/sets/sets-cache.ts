@@ -24,8 +24,9 @@ export class SetsCache {
       return setId;
     }
     const set = await PokemonTCG.findSetsByQueries({
-      q: `ptcgoCode:${abbr}`
+      q: `ptcgoCode:${abbr} AND -name:*Gallery`
     });
+
     if (set.length !== 1) {
       logger.error(`Invalid set abbreviation: ${abbr} (Found ${set.length} sets)`);
       return null;

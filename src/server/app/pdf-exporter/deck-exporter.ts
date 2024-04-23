@@ -451,17 +451,16 @@ export class DeckExporter {
       size: 6,
       opacity: 0.5,
     });
-    // Once the domain is set up, this will be the final text
-    // this.page.drawText("McTCG.com", {
-    //   x: x - (logoWidth / 2) + 15,
-    //   y: y - (logoHeight / 2) + 3,
-    //   rotate: {
-    //     type: RotationTypes.Degrees,
-    //     angle: -31,
-    //   },
-    //   size: 6,
-    //   opacity: 0.5,
-    // });
+    this.page.drawText("McTCG.com", {
+      x: x - (logoWidth / 2) + 15,
+      y: y - (logoHeight / 2) + 3,
+      rotate: {
+        type: RotationTypes.Degrees,
+        angle: -31,
+      },
+      size: 6,
+      opacity: 0.5,
+    });
   }
 
   private datePad(monthOrDate: string) {
