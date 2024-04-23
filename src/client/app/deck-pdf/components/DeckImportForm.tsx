@@ -6,7 +6,7 @@ import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from
 import styles from './DeckImportForm.module.css';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setLoading } from '../../store/loadingSlice';
-import { setDeck } from '../../store/deckSlice';
+import { setDeck, setDeckName } from '../../store/deckSlice';
 import { useRouter } from 'next/navigation';
 
 interface DeckFormFieldValue {
@@ -85,6 +85,7 @@ export default function DeckImportForm({ deckName }) {
           required
           fullWidth
           value={deckName}
+          onChange={(e) => dispatch(setDeckName(e.target.value))}
         />
         
 
