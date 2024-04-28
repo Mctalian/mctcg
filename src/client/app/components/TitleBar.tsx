@@ -5,10 +5,18 @@ import { useState } from "react";
 import logo from "./mctcg_white_transparent.png";
 
 export default function TitleBar() {
-  const pages = [{
-    name: "Deck PDF",
-    href: "/deck-pdf",
-  }];
+  const pages = [
+    {
+      name: "Deck PDF",
+      href: "/deck-pdf",
+    },
+  ];
+  if (process.env["DECK_BUILDER_ENABLED"]) {
+    pages.push({
+      name: "Decks",
+      href: "/decks",
+    })
+  }
   const drawerWidth = 240;
   const [mobileOpen, setMobileOpen] = useState(false);
 

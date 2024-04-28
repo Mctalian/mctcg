@@ -30,6 +30,7 @@
     "sharp": "^0.33.3"
   },
   "devDependencies": {
+    "@mui/x-charts": "^7.3.0",
     "@swc-node/register": "^1.9.0",
     "@swc/cli": "^0.3.12",
     "@swc/core": "^1.4.11",

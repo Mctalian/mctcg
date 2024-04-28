@@ -3,25 +3,32 @@ import loadingSlice, { initialLoadingState } from "./loadingSlice";
 import deckSlice, { initialDeckState } from "./deckSlice";
 import pdfSlice, { initialPdfState } from "./pdfSlice";
 import playerInfoSlice, { initialPlayerInfoState } from "./playerInfoSlice";
+import decksSlice, { initialDecksState } from "./decksSlice";
+import successSlice, { initialSuccessState } from "./successSlice";
 
 type State = {
   deck: typeof initialDeckState,
+  decks: typeof initialDecksState,
   loading: typeof initialLoadingState,
   pdf: typeof initialPdfState,
   playerInfo: typeof initialPlayerInfoState,
+  success: typeof initialSuccessState,
 };
 
 let preloadedState: State = {
   deck: initialDeckState,
+  decks: initialDecksState,
   loading: initialLoadingState,
   pdf: initialPdfState,
   playerInfo: initialPlayerInfoState,
+  success: initialSuccessState,
 };
 if (typeof window !== 'undefined') {
   // Perform localStorage action
   preloadedState = { 
     ...JSON.parse(localStorage.getItem('store')),
     loading: initialLoadingState,
+    success: initialSuccessState,
     pdf: initialPdfState,
   };
 }
@@ -30,9 +37,11 @@ export const store = configureStore({
   preloadedState: preloadedState,
   reducer: {
     deck: deckSlice,
+    decks: decksSlice,
     loading: loadingSlice,
     pdf: pdfSlice,
     playerInfo: playerInfoSlice,
+    success: successSlice,
   },
 });
 
@@ -40,6 +49,7 @@ export const store = configureStore({
 store.subscribe(() => {
   const state = { ...store.getState() };
   delete state.loading;
+  delete state.success;
   delete state.pdf;
   const deck = { ...state.deck }
   delete deck.name;

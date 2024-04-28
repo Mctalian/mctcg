@@ -72,6 +72,7 @@ export class CardValidator {
       this.card.supertype = cardInfo.supertype;
       this.card.subtypes = cardInfo.subtypes;
       this.card.regCode = cardInfo["regulationMark"] || "";
+      this.processImageField(cardInfo);
       this.card.singularityType = Singularity.None;
       if (cardInfo.rules?.length) {
         if (cardInfo.rules.some(rule => rule.includes("You can't have more than 1") && rule.includes("in your deck"))) {
@@ -87,7 +88,6 @@ export class CardValidator {
   }
 
   private processImageField(cardInfo: PokemonTCG.Card) {
-    
     if (!cardInfo.images) {
       return;
     }

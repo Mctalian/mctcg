@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setLoading } from '../../store/loadingSlice';
 import { setDeck, setDeckName } from '../../store/deckSlice';
 import { useRouter } from 'next/navigation';
+import { SortType } from '../../../lib/sort-type.enum';
 
 interface DeckFormFieldValue {
   value: string
@@ -35,7 +36,7 @@ export default function DeckImportForm({ deckName }) {
     sendGAEvent({ event: "buttonClicked", value: "decklistImport"})
     const target = e.target as DeckFormFields;
     const decklist = target.decklist.value;
-    const sortType = target.sortType.value;
+    const sortType = target.sortType.value as SortType;
     const response = await fetch("/api/v1/decklist/import", {
       method: "POST",
       headers: {

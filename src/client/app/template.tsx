@@ -8,6 +8,7 @@ import Loader from "./components/Loader"
 import styles from "./template.module.css"
 import { store } from "./store/store"
 import TitleBar from "./components/TitleBar"
+import Success from "./components/Success"
 
 export default function Template({ children }) {
 
@@ -15,6 +16,7 @@ export default function Template({ children }) {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Provider store={store}>
         <Loader />
+        <Success />
         <TitleBar />
         <main className={styles.main}>
           {children}

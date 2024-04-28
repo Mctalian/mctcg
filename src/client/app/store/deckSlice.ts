@@ -1,37 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Deck } from "../../lib/deck.interface";
+import { SortType } from "../../lib/sort-type.enum";
 
-enum Singularity {
-  None = "None",
-  "ACE SPEC" = "ACE SPEC",
-  Radiant = "Radiant",
-}
-
-interface Card {
-  quantity: number;
-  name: string;
-  setAbbr: string;
-  setNumber: string;
-  regCode?: string;
-  errors?: string[];
-}
-
-interface DeckState {
-  name: string;
-  deck: {
-    Pokemon: Card[];
-    Trainer: Card[];
-    Energy: Card[];
-    errors?: string[];
-    warnings?: string[];
-    format?: "Standard" | "Expanded" | "Unlimited"
-  },
-  sortType: string;
-}
+type DeckState = Deck;
 
 const initialState: DeckState = {
   name: `Deck ${crypto.randomUUID()}`,
   deck: null,
-  sortType: ""
+  sortType: SortType.Alphabetical,
 };
 
 export const deckSlice = createSlice({
