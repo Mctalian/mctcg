@@ -1,20 +1,23 @@
 "use client"
 
-import { Box, Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { Box, Button, FormControl, FormLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { sendGAEvent } from "@next/third-parties/google";
 import { format, isValid } from "date-fns";
 import { useId } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { setPlayerDob, setPlayerId, setPlayerName } from "../../../store/playerInfoSlice";
+import { initialPlayerInfoState, setPlayerDob, setPlayerId, setPlayerName, setPreferredSortType } from "../../../store/playerInfoSlice";
+import { SortType } from "../../../../lib/sort-type.enum";
 
 export default function PdfPrepForm() {
   const playerNameId = useId();
   const playerIdId = useId();
   const playerDobId = useId();
+  const sortLabelId = useId();
+  const sortId = useId();
 
   const loading = useAppSelector((state) => state.loading.value);
-  const { playerName, playerId, playerDob } = useAppSelector((state) => state.playerInfo);
+  const { playerName, playerId, playerDob, preferredSort } = useAppSelector((state) => state.playerInfo);
   const dispatch = useAppDispatch();
 
   return (
@@ -60,6 +63,22 @@ export default function PdfPrepForm() {
           value={new Date(playerDob)}
           onChange={(e) => isValid(e) && dispatch(setPlayerDob(format(e, "MM/dd/yyyy")))}
         />
+      </FormControl>
+
+      <FormControl required fullWidth>
+        <FormLabel id={sortLabelId}>Preferred Sort Method</FormLabel>
+        <Select
+          labelId={sortLabelId}
+          id={sortId}
+          name="sortType"
+          defaultValue={preferredSort || initialPlayerInfoState.preferredSort}
+          onChange={(e) => dispatch(setPreferredSortType(e.target.value as SortType))}
+        >
+          <MenuItem value={SortType.Alphabetical}>Alphabetical</MenuItem>
+          <MenuItem value={SortType.SetAlphabetical}>By Set (Alphabetical)</MenuItem>
+          <MenuItem value={SortType.SetChronological}>By Set (Release Date)</MenuItem>
+          <MenuItem value={SortType.Quantity}>By Quantity</MenuItem>
+        </Select>
       </FormControl>
 
       <Button

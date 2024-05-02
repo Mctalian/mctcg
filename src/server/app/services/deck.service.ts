@@ -25,8 +25,12 @@ export class DeckService {
     if (!this.isValidGenerateRequest({ ...dto, ...deck })) {
       return;
     }
-    const { playerName, playerId, playerDob, format = Format.Standard } = dto;
+    const { playerName, playerId, playerDob, format = Format.Standard, sortType } = dto;
+    console.log(sortType);
     if (await this.isDeckValid(deck, format)) {
+      if (sortType) {
+        await deck.sortSections(sortType);
+      }
       const uniqueFilename = `out/${randomUUID()}.pdf`;
       const pdfFile = await deck.export(playerName, playerId, new Date(playerDob), format, uniqueFilename).catch((error) => {
         logger.error(JSON.stringify(error));
@@ -111,7 +115,14 @@ export class DeckService {
   private async isDeckValid(deck: Deck, format: Format): Promise<boolean> {
     if (await deck.isValid(format)) {
       this.ctx.status = 200;
-      this.ctx.body = `Deck is a valid ${format} deck`;
+      this.ctx.body = {
+        [Section.Pokemon]: deck[Section.Pokemon],
+        [Section.Trainer]: deck[Section.Trainer],
+        [Section.Energy]: deck[Section.Energy],
+        format: deck.format,
+        errors: deck.errors,
+        warnings: deck.warnings,
+      } as DeckDto;
       return true
     } else {
       this.ctx.status = 400;

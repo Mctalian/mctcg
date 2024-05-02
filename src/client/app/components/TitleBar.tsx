@@ -2,21 +2,20 @@ import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListI
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from "next/image";
 import { useState } from "react";
+import "../../lib/envConfig";
 import logo from "./mctcg_white_transparent.png";
 
 export default function TitleBar() {
   const pages = [
     {
+      name: "Decks",
+      href: "/decks",
+    },
+    {
       name: "Deck PDF",
       href: "/deck-pdf",
     },
   ];
-  if (process.env["DECK_BUILDER_ENABLED"]) {
-    pages.push({
-      name: "Decks",
-      href: "/decks",
-    })
-  }
   const drawerWidth = 240;
   const [mobileOpen, setMobileOpen] = useState(false);
 

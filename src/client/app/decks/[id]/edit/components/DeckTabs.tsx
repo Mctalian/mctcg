@@ -1,5 +1,8 @@
-import { Box, Tabs, Tab, Typography } from "@mui/material";
+import { Box, Tabs, Tab, Typography, List, ListItem } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
+import { Deck } from "../../../../../lib/deck.interface";
+import SectionList from "./SectionList";
+import { DisplayType } from "./EditDeck";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -27,7 +30,12 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export default function BasicTabs() {
+interface DeckTabsProps {
+  deck: Deck,
+  displayType: DisplayType
+}
+
+export default function DeckTabs({ deck, displayType }: DeckTabsProps) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
@@ -45,16 +53,16 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Item One
+        <SectionList list={deck.deck.Pokemon} displayType={displayType} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <SectionList list={deck.deck.Trainer} displayType={displayType} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <SectionList list={deck.deck.Energy} displayType={displayType} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        <SectionList list={deck.deck.Pokemon.concat(deck.deck.Trainer, deck.deck.Energy)} displayType={displayType} />
       </TabPanel>
     </Box>
   );

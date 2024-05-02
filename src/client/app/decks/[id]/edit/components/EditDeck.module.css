@@ -1,0 +1,10 @@
+.deck {
+  flex-wrap: nowrap;
+  width: 70%;
+}
+
+@media (max-width: 875px) {
+  .deck {
+    flex-wrap: wrap-reverse
+  }
+}

@@ -18,8 +18,8 @@ deckRouter.post("/validate", async (ctx: ExtendableContext, next) => {
 });
 
 deckRouter.post("/generate", async (ctx: ExtendableContext, next) => {
-  const { playerName, playerId, playerDob, format, ...deckDto } = ctx.request.body as DeckGenerateDto;
+  const { playerName, playerId, playerDob, format, sortType, ...deckDto } = ctx.request.body as DeckGenerateDto;
   const deck = new Deck(ctx as CacheContext, deckDto as SectionedDeck);
-  await new DeckService(ctx).generatePdf({ playerName, playerId, playerDob, format, ...deck });
+  await new DeckService(ctx).generatePdf({ playerName, playerId, playerDob, format, sortType, ...deck });
   await next();
 });

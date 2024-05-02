@@ -6,4 +6,8 @@ export interface Card {
   regCode?: string;
   errors?: string[];
   subtypes?: string[];
+  images: {
+    small: string;
+    large: string;
+  }
 }

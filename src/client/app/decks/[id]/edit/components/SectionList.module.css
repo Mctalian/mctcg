@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  margin: 0.25rem;
+}
+
+.cardImage {
+  /* margin: 0.25rem; */
+}
+
+.container:hover {
+  transform: scale(2.5);
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.quantity {
+  position: relative;
+  left: 6rem;
+  top: -11rem;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 60px;
+  background-color: blue;
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  z-index: 1;
+}

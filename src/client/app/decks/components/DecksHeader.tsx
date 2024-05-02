@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import {  
   Add as AddIcon,
   ArrowDownward as ArrowDownwardIcon,
@@ -21,7 +21,11 @@ export default function DecksHeader() {
           { !(playerName && playerId) ? (
             <Button className={styles.button} sx={{ marginRight: "1rem"}} variant="contained" href="/decks/player-info"><EditIcon/>Enter Player Info</Button>
           ) : (
-            <p><strong>{playerName}</strong> <em>{playerId}</em></p>
+            <p><strong>{playerName}</strong> <em>{playerId}</em><Tooltip title="Edit Player Info">
+            <IconButton aria-label="edit deck" href={`/decks/player-info`}>
+              <EditIcon/>
+            </IconButton>
+          </Tooltip></p>
           ) }
         </Suspense>
       </Box>
