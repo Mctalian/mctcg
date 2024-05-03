@@ -11,10 +11,6 @@ export default function TitleBar() {
       name: "Decks",
       href: "/decks",
     },
-    {
-      name: "Deck PDF",
-      href: "/deck-pdf",
-    },
   ];
   const drawerWidth = 240;
   const [mobileOpen, setMobileOpen] = useState(false);

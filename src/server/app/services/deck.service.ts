@@ -26,7 +26,6 @@ export class DeckService {
       return;
     }
     const { playerName, playerId, playerDob, format = Format.Standard, sortType } = dto;
-    console.log(sortType);
     if (await this.isDeckValid(deck, format)) {
       if (sortType) {
         await deck.sortSections(sortType);

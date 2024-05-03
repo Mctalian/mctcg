@@ -5,10 +5,12 @@ import pdfSlice, { initialPdfState } from "./pdfSlice";
 import playerInfoSlice, { initialPlayerInfoState } from "./playerInfoSlice";
 import decksSlice, { initialDecksState } from "./decksSlice";
 import successSlice, { initialSuccessState } from "./successSlice";
+import displayPreferencesSlice, { initialDisplayPreferencesState } from "./displayPreferencesSlice";
 
 type State = {
   deck: typeof initialDeckState,
   decks: typeof initialDecksState,
+  displayPreferences: typeof initialDisplayPreferencesState,
   loading: typeof initialLoadingState,
   pdf: typeof initialPdfState,
   playerInfo: typeof initialPlayerInfoState,
@@ -18,6 +20,7 @@ type State = {
 let preloadedState: State = {
   deck: initialDeckState,
   decks: initialDecksState,
+  displayPreferences: initialDisplayPreferencesState,
   loading: initialLoadingState,
   pdf: initialPdfState,
   playerInfo: initialPlayerInfoState,
@@ -38,6 +41,7 @@ export const store = configureStore({
   reducer: {
     deck: deckSlice,
     decks: decksSlice,
+    displayPreferences: displayPreferencesSlice,
     loading: loadingSlice,
     pdf: pdfSlice,
     playerInfo: playerInfoSlice,

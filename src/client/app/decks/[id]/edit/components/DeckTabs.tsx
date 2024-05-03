@@ -1,8 +1,8 @@
-import { Box, Tabs, Tab, Typography, List, ListItem } from "@mui/material";
+import { Box, Tabs, Tab } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
 import { Deck } from "../../../../../lib/deck.interface";
 import SectionList from "./SectionList";
-import { DisplayType } from "./EditDeck";
+import { DeckDisplayType } from "../../../../../lib/deck-display-type.interface";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -23,7 +23,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -32,7 +32,7 @@ function TabPanel(props: TabPanelProps) {
 
 interface DeckTabsProps {
   deck: Deck,
-  displayType: DisplayType
+  displayType: DeckDisplayType
 }
 
 export default function DeckTabs({ deck, displayType }: DeckTabsProps) {

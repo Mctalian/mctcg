@@ -1,16 +1,18 @@
+"use client"
+
 import { Box, List, ListItem } from "@mui/material"
-import { DisplayType } from "./EditDeck"
 import { Card } from "../../../../../lib/card.interface"
+import { DeckDisplayType } from "../../../../../lib/deck-display-type.interface";
 import styles from "./SectionList.module.css";
 
 interface SectionListProps {
   list: Card[],
-  displayType: DisplayType
+  displayType: DeckDisplayType
 }
 
 export default function SectionList({ list, displayType }: SectionListProps) {
   function isCardDisplay() {
-    return displayType === DisplayType.Card;
+    return displayType === DeckDisplayType.Card;
   }
   function listMode() {
     return (
