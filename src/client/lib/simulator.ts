@@ -52,7 +52,6 @@ export class Simulator implements DeckStats {
   }
 
   public run(numberOfRuns: number = 10000, skipPowerShuffle = false) {
-    console.log(numberOfRuns);
     let mulligans = 0;
     let gamesWithMulligan = 0;
     const freqInHand = new Map<string, number>();

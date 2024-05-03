@@ -55,9 +55,7 @@ export default function EditDeck({ deckIndex }: EditDeckProps) {
         </Select>
       </FormControl>
       <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%", flexWrap: "inherit" }}>
-        <Suspense fallback="Loading...">
-          <DeckTabs deck={deck} displayType={displayType} />
-        </Suspense>
+        <DeckTabs deck={deck} displayType={displayType} />
         <Box sx={{ width: "50%", marginLeft: "1rem" }}>
           { deckStats.handFrequency && (<Box>
             <h4>10,000 Run Simulation Results</h4>

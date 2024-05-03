@@ -35,10 +35,9 @@ export default function SectionList({ list, displayType }: SectionListProps) {
     return (
       <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
         { list.map((c) => (
-          <Box className={styles.container} sx={{ width: width}}>
+          <Box key={`${c.setAbbr}-${c.setNumber}`} className={styles.container} sx={{ width: width}}>
             <img 
               className={styles.cardImage}
-              key={`${c.setAbbr}-${c.setNumber}`}
               src={c.images.large}
               alt={`${c.quantity} ${c.name} ${c.setAbbr} ${c.setNumber}`}
               width={width}
