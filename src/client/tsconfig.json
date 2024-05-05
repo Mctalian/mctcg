@@ -21,7 +21,11 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@mctcg/store/*": [ "./app/store/*"],
+      "@mctcg/lib/*": [ "./lib/*" ],
+    }
   },
   "include": [
     "next-env.d.ts",

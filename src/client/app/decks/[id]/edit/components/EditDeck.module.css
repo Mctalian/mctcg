@@ -5,6 +5,7 @@
 
 @media (max-width: 875px) {
   .deck {
-    flex-wrap: wrap-reverse
+    flex-wrap: wrap-reverse;
+    width: 100%;
   }
 }

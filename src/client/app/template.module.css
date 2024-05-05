@@ -8,3 +8,9 @@
   overflow: auto;
   max-height: fit-content;
 }
+
+@media (max-width: 875px) {
+  .main {
+    margin: 4rem 0.5rem;
+  }
+}
