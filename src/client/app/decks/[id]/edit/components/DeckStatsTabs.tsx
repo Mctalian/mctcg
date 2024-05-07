@@ -1,17 +1,10 @@
 import { Box, Tabs, Tab } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
-import { Deck } from "../../../../../lib/deck.interface";
-import TabPanel from "./TabPanel";
-import DeckStatistics from "./DeckStats";
-import { DeckStats } from "@mctcg/lib/simulator";
 import DeckComposition from "./DeckComposition";
+import DeckStatistics from "./DeckStats";
+import TabPanel from "./TabPanel";
 
-interface DeckStatsTabsProps {
-  deck: Deck,
-  deckStats: DeckStats
-}
-
-export default function DeckStatsTabs({ deck, deckStats }: DeckStatsTabsProps) {
+export default function DeckStatsTabs() {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
@@ -19,7 +12,7 @@ export default function DeckStatsTabs({ deck, deckStats }: DeckStatsTabsProps) {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Composition" />
@@ -27,10 +20,10 @@ export default function DeckStatsTabs({ deck, deckStats }: DeckStatsTabsProps) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <DeckComposition deck={deck} />
+        <DeckComposition />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DeckStatistics deckStats={deckStats} deck={deck} />
+        <DeckStatistics />
       </TabPanel>
     </Box>
   );

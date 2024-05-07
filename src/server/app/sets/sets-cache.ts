@@ -15,7 +15,10 @@ export class SetsCache {
   }
 
   public async addAbbr(abbr: string, setId: string): Promise<void> {
-    await this.cache.set(`${pdeckfSetsKey}:${abbr}`, setId);
+    await Promise.all([
+      this.cache.set(`${pdeckfSetsKey}:${abbr}`, setId),
+      this.cache.set(`${pdeckfSetsKey}:${setId}`, abbr),
+    ]);
   }
 
   public async getSetByAbbr(abbr: string): Promise<string | null> {
@@ -33,6 +36,24 @@ export class SetsCache {
     }
     await this.addAbbr(abbr, set[0].id);
     return set[0].id;
+  }
+
+  public async getSetById(setId: string): Promise<string | null> {
+    const abbr = await this.cache.get(`${pdeckfSetsKey}:${setId}`);
+    if (abbr) {
+      return abbr;
+    }
+
+    const set = await PokemonTCG.findSetsByQueries({
+      q: `id:${setId} AND -name:*Gallery`
+    });
+
+    if (set.length !== 1) {
+      logger.error(`Invalid set id: ${setId} (Found ${set.length} sets)`);
+      return null;
+    }
+    await this.addAbbr(set[0].ptcgoCode, setId);
+    return set[0].ptcgoCode;
   }
 
   public async getSets(): Promise<PokemonTCG.Set[]> {

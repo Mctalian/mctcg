@@ -2,7 +2,7 @@ import { Singularity } from "./singularity.enum.js";
 
 export interface Card {
   id?: string;
-  quantity: number;
+  quantity?: number;
   name: string;
   setAbbr: string;
   setNumber: string;

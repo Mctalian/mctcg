@@ -1,12 +1,11 @@
 "use client"
 
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
 import { Box, Button, TextField } from '@mui/material';
 import styles from './DeckImportForm.module.css';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setLoading } from '../../../store/loadingSlice';
-import { initialDeckState, setDeckName } from '../../../store/deckSlice';
 import { useRouter } from 'next/navigation';
 import { SortType } from '../../../../lib/sort-type.enum';
 import { addDeck } from '../../../store/decksSlice';
@@ -21,14 +20,15 @@ interface DeckFormFields extends EventTarget {
 }
 
 export default function DeckImportForm() {
+  const router = useRouter();
   const deckNameId = useId();
   const deckListId = useId();
 
+  const [deckName, setDeckName] = useState(`Deck ${crypto.randomUUID()}`)
+
   const loading = useAppSelector((state) => state.loading.value);
-  const { name: deckName } = useAppSelector((state) => state.deck || initialDeckState);
   const { preferredSort: sortType } = useAppSelector((state) => state.playerInfo)
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -54,7 +54,6 @@ export default function DeckImportForm() {
         deck,
         sortType: sortType || SortType.SetChronological
       }));
-      dispatch(setDeckName(initialDeckState.name));
       router.push('/decks');
     }
   }
@@ -86,7 +85,7 @@ export default function DeckImportForm() {
           required
           fullWidth
           value={deckName}
-          onChange={(e) => dispatch(setDeckName(e.target.value))}
+          onChange={(e) => setDeckName(e.target.value)}
         />
         
 

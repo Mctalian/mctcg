@@ -1,4 +1,5 @@
 export interface Card {
+  id: string;
   quantity: number;
   name: string;
   setAbbr: string;
@@ -6,6 +7,7 @@ export interface Card {
   regCode?: string;
   errors?: string[];
   subtypes?: string[];
+  supertype: "Pokémon" | "Trainer" | "Energy";
   images: {
     small: string;
     large: string;

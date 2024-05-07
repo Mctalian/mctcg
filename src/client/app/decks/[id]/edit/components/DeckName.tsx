@@ -1,12 +1,18 @@
 import { Check, Edit, X } from "@mui/icons-material";
 import { Tooltip, IconButton, Box, TextField } from "@mui/material";
-import { useState } from "react";
-import { useAppDispatch } from "../../../../store/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { renameDeck } from "../../../../store/decksSlice";
 
-export default function DeckName({ deck, deckIndex }) {
+export default function DeckName() {
+  const deck = useAppSelector((state) => state.decks.decks[state.decks.selectedDeckIndex] );
   const [editing, setEditMode] = useState(false);
-  const [deckName, setDeckName] = useState(deck.name);
+  const [deckName, setDeckName] = useState("");
+  useEffect(() => {
+    if (deck) {
+      setDeckName(deck.name)
+    }
+  }, [deck])
 
   const dispatch = useAppDispatch();
 
@@ -16,7 +22,7 @@ export default function DeckName({ deck, deckIndex }) {
   }
 
   function rename() {
-    dispatch(renameDeck({ deckIndex, newName: deckName }));
+    dispatch(renameDeck(deckName));
     setEditMode(false);
   }
 
@@ -27,13 +33,13 @@ export default function DeckName({ deck, deckIndex }) {
 
   return (
     <>
-      {!editing && <h1>{deck.name} <Tooltip title="Rename Deck">
+      {!editing && <h1>{deckName} <Tooltip title="Rename Deck">
         <IconButton aria-label="rename deck" onClick={edit}>
           <Edit />
         </IconButton>
       </Tooltip></h1>}
       {editing && <Box sx={{ display: "flex", flexDirection: "row" }}>
-        <TextField sx={{ width: "30rem" }} defaultValue={deck.name} value={deckName} onChange={(e) => setDeckName(e.target.value)}/> <Tooltip title="Submit Deck Name">
+        <TextField sx={{ width: "30rem" }} value={deckName} onChange={(e) => setDeckName(e.target.value)}/> <Tooltip title="Submit Deck Name">
           <IconButton aria-label="submit deck rename" onClick={rename}>
             <Check />
           </IconButton>

@@ -1,9 +1,14 @@
 "use client"
 
 import { Box, List, ListItem } from "@mui/material"
-import { Card } from "../../../../../lib/card.interface"
-import { DeckDisplayType } from "../../../../../lib/deck-display-type.interface";
+import { useState } from "react";
+import { Card } from "@mctcg/lib/card.interface"
+import { DeckDisplayType } from "@mctcg/lib/deck-display-type.interface";
 import styles from "./SectionList.module.css";
+import CardDialog from "./CardDialog";
+import { useAppDispatch } from "@mctcg/store/hooks";
+import { selectCard } from "@mctcg/store/decksSlice";
+import DisplayCardMode from "./DisplayCardMode";
 
 interface SectionListProps {
   list: Card[],
@@ -11,6 +16,8 @@ interface SectionListProps {
 }
 
 export default function SectionList({ list, displayType }: SectionListProps) {
+  console.log(list);
+  const dispatch = useAppDispatch();
   function isCardDisplay() {
     return displayType === DeckDisplayType.Card;
   }
@@ -25,32 +32,20 @@ export default function SectionList({ list, displayType }: SectionListProps) {
       </List>
     )
   }
+  function handleClick(card: Card) {
+    dispatch(selectCard(card));
+  }
   function cardMode() {
-    const widthRatio = 5;
-    const heightRatio = 7;
-    const sizeCoefficient = 2;
-    const fontSize = 16;
-    const width = widthRatio * sizeCoefficient * fontSize;
-    const height = heightRatio * sizeCoefficient * fontSize;
     return (
-      <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
-        { list.map((c) => (
-          <Box key={`${c.setAbbr}-${c.setNumber}`} className={styles.container} sx={{ width: width}}>
-            <img 
-              className={styles.cardImage}
-              src={c.images.large}
-              alt={`${c.quantity} ${c.name} ${c.setAbbr} ${c.setNumber}`}
-              width={width}
-              height={height}
-            />
-            <span className={styles.quantity}>{c.quantity}</span>
-          </Box>
-          
-        ))}
-      </Box>
+      <>
+        <DisplayCardMode list={list} handleClick={handleClick} />
+      </>
     )
   }
 
+  if (!list) {
+    return <></>
+  }
   if (isCardDisplay()) {
     return cardMode();
   } else {

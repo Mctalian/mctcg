@@ -9,6 +9,7 @@ import { ValidationErrorsAggregate } from "./validation-errors-aggregate.interfa
 import { CacheContext } from "../../shared/cache-context.interface.js";
 import { SortType } from "./sort-type.enum.js";
 import { compareAsc } from "date-fns";
+import { CardFactory } from "../cards/card-factory.js";
 
 export class Deck implements SectionedDeck {
   [Section.Pokemon]: Card[] = [];
@@ -35,9 +36,9 @@ export class Deck implements SectionedDeck {
   }
 
   get totalCards(): number {
-    return this[Section.Pokemon].reduce((acc, card) => acc + card.quantity, 0) +
-      this[Section.Trainer].reduce((acc, card) => acc + card.quantity, 0) +
-      this[Section.Energy].reduce((acc, card) => acc + card.quantity, 0);
+    return this[Section.Pokemon].reduce((acc, card) => acc + (card.quantity ?? 0), 0) +
+      this[Section.Trainer].reduce((acc, card) => acc + (card.quantity ?? 0), 0) +
+      this[Section.Energy].reduce((acc, card) => acc + (card.quantity ?? 0), 0);
   }
 
   static async import(data: string, cacheContext: CacheContext, sortType: SortType = SortType.Alphabetical): Promise<Deck> {
@@ -73,25 +74,8 @@ export class Deck implements SectionedDeck {
         continue;
       }
       // Remove PH from the end of the line
-      let santizedLine = line;
-      if (line.trim().endsWith('PH')) {
-        santizedLine = line.substring(0, (line.lastIndexOf('PH')) - 1);
-      }
-      const quantity = parseInt(santizedLine.split(' ')[0]);
-      const setNumberIndex = santizedLine.lastIndexOf(' ') + 1;
-      const setNumber = santizedLine.substring(setNumberIndex).trim();
-      // Get the set abbreviation by removing the set number from the end of the line
-      const lineWithoutSetNumber = santizedLine.substring(0, setNumberIndex - 1);
-      const setAbbrIndex = lineWithoutSetNumber.lastIndexOf(' ') + 1;
-      const setAbbr = lineWithoutSetNumber.substring(setAbbrIndex).trim();
-      const lineWithoutSetInfo = lineWithoutSetNumber.substring(0, setAbbrIndex - 1);
-      const name = lineWithoutSetInfo.substring(lineWithoutSetInfo.indexOf(' ') + 1).trim();
-      const card: Card = {
-        quantity,
-        name,
-        setAbbr,
-        setNumber
-      };
+      const cardFactory = new CardFactory(cacheContext.setsCache, cacheContext.cardsCache);
+      const card = cardFactory.createFromLiveExportLine(line);
       deck[section].push(card);
     }
 
@@ -166,7 +150,7 @@ export class Deck implements SectionedDeck {
     this[Section.Pokemon].forEach(card => {
       const key = `${card.name}-${card.setAbbr}-${card.setNumber}`;
       if (pokemonMap.has(key)) {
-        pokemonMap.get(key)!.quantity += card.quantity;
+        pokemonMap.get(key)!.quantity = (pokemonMap.get(key)!.quantity ??0) + (card.quantity ?? 0);
       } else {
         pokemonMap.set(key, { ...card });
       }
@@ -175,7 +159,7 @@ export class Deck implements SectionedDeck {
     this[Section.Trainer].forEach(card => {
       const key = `${card.name}-${card.setAbbr}-${card.setNumber}`;
       if (trainerMap.has(key)) {
-        trainerMap.get(key)!.quantity += card.quantity;
+        trainerMap.get(key)!.quantity = (trainerMap.get(key)!.quantity ?? 0) + (card.quantity ?? 0);
       } else {
         trainerMap.set(key, { ...card });
       }
@@ -184,7 +168,7 @@ export class Deck implements SectionedDeck {
     this[Section.Energy].forEach(card => {
       const key = `${card.name}-${card.setAbbr}-${card.setNumber}`;
       if (energyMap.has(key)) {
-        energyMap.get(key)!.quantity += card.quantity;
+        energyMap.get(key)!.quantity = (energyMap.get(key)!.quantity ?? 0) + (card.quantity ?? 0);
       } else {
         energyMap.set(key, { ...card });
       }
@@ -268,8 +252,8 @@ export class Deck implements SectionedDeck {
   }
 
   private sortSectionsByQuantity() {
-    this[Section.Pokemon].sort((a, b) => b.quantity - a.quantity);
-    this[Section.Trainer].sort((a, b) => b.quantity - a.quantity);
-    this[Section.Energy].sort((a, b) => b.quantity - a.quantity);
+    this[Section.Pokemon].sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
+    this[Section.Trainer].sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
+    this[Section.Energy].sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
   }
 }

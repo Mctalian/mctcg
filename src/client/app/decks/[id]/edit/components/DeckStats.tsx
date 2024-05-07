@@ -1,15 +1,27 @@
+import { useEffect, useState } from "react"
 import { BarChart } from "@mui/x-charts"
 import { Box } from "@mui/material"
-import { countCards } from "../../../../../lib/deck-utils"
-import { Deck } from "../../../../../lib/deck.interface"
-import { DeckStats } from "../../../../../lib/simulator"
+import { countCards } from "@mctcg/lib/deck-utils"
+import { Deck } from "@mctcg/lib/deck.interface"
+import { DeckStats, Simulator } from "@mctcg/lib/simulator"
+import { useAppSelector } from "@mctcg/store/hooks"
 
-interface DeckStatsProps {
-  deck: Deck,
-  deckStats: DeckStats,
-}
+export default function DeckStatistics() {
+  const deck = useAppSelector((state) => state.decks.decks[state.decks.selectedDeckIndex] );
+  const [deckStats, setDeckStats] = useState({} as DeckStats);
+  useEffect(() => {
+    if (countCards(deck) !== 60) {
+      setDeckStats({} as DeckStats)
+      return;
+    }
+    console.log("Running simulator");
+    const simulator = new Simulator(deck);
+    simulator.run();
+    setDeckStats({
+      ...simulator
+    });
+  }, [deck])
 
-export default function DeckStatistics({deckStats, deck}: DeckStatsProps) {
   if (!deckStats?.handFrequency) {
     return <span>Deck Stats Unavailable: { countCards(deck) !== 60 ? "Deck must have exactly 60 cards" : "There was an issue :(" }</span>
   }
@@ -21,7 +33,7 @@ export default function DeckStatistics({deckStats, deck}: DeckStatsProps) {
       <p>Avg. Mulligans per Game: {deckStats.averageMulligans}</p>
       <Box>
         <BarChart
-          width={500}
+          width={400}
           height={300}
           series={[
             { data: Array.from(deckStats.handFrequency.values()).map((f) => +(f*100).toFixed(2)), label: "% of opening hands with 1" }

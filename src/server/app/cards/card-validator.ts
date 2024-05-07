@@ -3,6 +3,9 @@ import { logger } from "../../utils/index.js";
 import { Singularity } from "./singularity.enum.js";
 import { CacheContext } from "../../shared/cache-context.interface.js";
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
+import { CardFactory } from "./card-factory.js";
+import { CardsCache } from "./cards-cache.js";
+import { SetsCache } from "../sets/sets-cache.js";
 
 export enum CardValidationError {
   UnknownCard = "Unknown card based on set abbreviation and number",
@@ -11,8 +14,8 @@ export enum CardValidationError {
 }
 
 export class CardValidator {
-  private readonly setsCache;
-  private readonly cardsCache;
+  private readonly setsCache: SetsCache;
+  private readonly cardsCache: CardsCache;
 
   constructor(
     private readonly card: Card,
@@ -67,40 +70,16 @@ export class CardValidator {
       }
       this.card.errors.push(`${CardValidationError.UnknownCard}: ${this.card.setAbbr}-${this.card.setNumber} (${this.card.name})`);
     } else {
-      this.card.id = cardInfo.id;
-      this.card.name = cardInfo.name;
-      this.card.supertype = cardInfo.supertype;
-      this.card.subtypes = cardInfo.subtypes;
-      this.card.regCode = cardInfo["regulationMark"] || "";
-      this.processImageField(cardInfo);
-      this.card.singularityType = Singularity.None;
-      if (cardInfo.rules?.length) {
-        if (cardInfo.rules.some(rule => rule.includes("You can't have more than 1") && rule.includes("in your deck"))) {
-          const matchingSubtype = cardInfo.subtypes?.find(subtype => Singularity[subtype]);
-          if (matchingSubtype) {
-            this.card.singularityType = Singularity[matchingSubtype];
-          } else {
-            logger.error(`Card has singularity rule but no matching subtype: ${JSON.stringify(cardInfo, null, 2)}`);
-          }
-        }
-      }
-    }
-  }
-
-  private processImageField(cardInfo: PokemonTCG.Card) {
-    if (!cardInfo.images) {
-      return;
-    }
-    this.card.images = this.card.images || {};
-    if (cardInfo.images.small) {
-      this.card.images.small = cardInfo.images.small;
-    }
-    if (cardInfo.images.large) {
-      this.card.images.large = cardInfo.images.large;
+      const cardFactory = new CardFactory(this.setsCache, this.cardsCache);
+      Object.assign(this.card, await cardFactory.createFromApiObject(cardInfo))
     }
   }
   
   private validateCardQuantity() {
+    if (!this.card.quantity) {
+      logger.error("Card does not have a quantity");
+      return;
+    }
     if (!isBasicEnergy(this.card) && this.card.quantity > 4) {
       logger.error(`Card has more than 4 copies: ${this.card.quantity}`);
       if (!this.card.errors) {

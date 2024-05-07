@@ -4,13 +4,14 @@ import { Deck } from "../../../../../lib/deck.interface";
 import SectionList from "./SectionList";
 import { DeckDisplayType } from "../../../../../lib/deck-display-type.interface";
 import TabPanel from "./TabPanel";
+import { useAppSelector } from "@mctcg/store/hooks";
 
 interface DeckTabsProps {
-  deck: Deck,
   displayType: DeckDisplayType
 }
 
-export default function DeckTabs({ deck, displayType }: DeckTabsProps) {
+export default function DeckTabs({ displayType }: DeckTabsProps) {
+  const deck = useAppSelector((state) => state.decks.decks[state.decks.selectedDeckIndex] );
   const [value, setValue] = useState(0);
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
@@ -21,7 +22,7 @@ export default function DeckTabs({ deck, displayType }: DeckTabsProps) {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Pokemon" />
+          <Tab label="Pokémon" />
           <Tab label="Trainers" />
           <Tab label="Energy" />
           <Tab label="All" />

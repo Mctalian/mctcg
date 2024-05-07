@@ -106,3 +106,10 @@ a {
     color-scheme: dark;
   }
 }
+
+.MuiPieArc-root {
+  transition: 0.1s;
+}
+.MuiPieArcLabel-root {
+  pointer-events: none;
+}
