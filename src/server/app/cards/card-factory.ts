@@ -1,9 +1,9 @@
 import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
-import { Card } from "./card.interface";
-import { SetsCache } from "../sets/sets-cache";
-import { CardsCache } from "./cards-cache";
-import { Singularity } from "./singularity.enum";
-import { logger } from "../../utils";
+import { Card } from "./card.interface.js";
+import { SetsCache } from "../sets/sets-cache.js";
+import { CardsCache } from "./cards-cache.js";
+import { Singularity } from "./singularity.enum.js";
+import { logger } from "../../utils/logger.js";
 
 export class CardFactory {
   

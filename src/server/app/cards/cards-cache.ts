@@ -2,7 +2,6 @@ import { PokemonTCG } from "pokemon-tcg-sdk-typescript";
 import { logger, redis, Prefix } from "../../utils/index.js";
 import { isString } from "../../utils/is-string.js";
 import { CardSearchDto } from "../../shared/card-search-dto.interface.js";
-import { Card } from "./card.interface.js";
 import { CardFactory } from "./card-factory.js";
 import { CURRENT_STANDARD_REGULATIONS } from "../decks/deck-validator.js";
 
