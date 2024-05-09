@@ -9,9 +9,14 @@
   bottom: 2rem;
 }
 
+@media (max-width: 1200px) {
+  .deck {
+    width: 100%;
+  }
+}
+
 @media (max-width: 875px) {
   .deck {
     flex-wrap: wrap-reverse;
-    width: 100%;
   }
 }

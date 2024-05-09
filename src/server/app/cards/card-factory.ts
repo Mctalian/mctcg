@@ -40,9 +40,6 @@ export class CardFactory {
   }
 
   async createFromApiObject(c: PokemonTCG.Card) {
-    if (!c.set.ptcgoCode) {
-      logger.debug(JSON.stringify(c));
-    }
     const card: Card = {
       id: c.id,
       name: c.name,

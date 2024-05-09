@@ -20,7 +20,7 @@ export enum DeckValidationWarning {
 }
 
 // As of 2024-04-05, the current standard regulations are F, G, and H
-const CURRENT_STANDARD_REGULATIONS = [
+export const CURRENT_STANDARD_REGULATIONS = [
   "F",
   "G",
   "H",
@@ -48,9 +48,9 @@ export class DeckValidator {
 
   private validateNumberOfCards() {
     logger.debug(`Validating number of cards...`);
-    const totalPokemon = this.deck[Section.Pokemon].reduce((acc, card) => acc + card.quantity, 0);
-    const totalTrainer = this.deck[Section.Trainer].reduce((acc, card) => acc + card.quantity, 0);
-    const totalEnergy = this.deck[Section.Energy].reduce((acc, card) => acc + card.quantity, 0);
+    const totalPokemon = this.deck[Section.Pokemon].reduce((acc, card) => acc + (card.quantity ?? 0), 0);
+    const totalTrainer = this.deck[Section.Trainer].reduce((acc, card) => acc + (card.quantity ?? 0), 0);
+    const totalEnergy = this.deck[Section.Energy].reduce((acc, card) => acc + (card.quantity ?? 0), 0);
     if (totalPokemon + totalTrainer + totalEnergy !== 60) {
       logger.error("Deck must have exactly 60 cards (You have " + (totalPokemon + totalTrainer + totalEnergy) + " cards)");
       if (!this.deck.errors) {
@@ -65,7 +65,7 @@ export class DeckValidator {
     const cardQuantities = new Map<string, number>();
     const cards = this.deck.Pokemon.concat(this.deck.Trainer).concat(this.deck.Energy.filter(card => !isBasicEnergy(card)));
     cards.forEach(card => {
-      cardQuantities.set(card.name, (cardQuantities.get(card.name) || 0) + card.quantity);
+      cardQuantities.set(card.name, (cardQuantities.get(card.name) || 0) + (card.quantity ?? 0));
     });
     const invalidCards = Array.from(cardQuantities.entries()).filter(([_, quantity]) => quantity > 4);
     if (invalidCards.length > 0) {
@@ -116,7 +116,7 @@ export class DeckValidator {
     });
     // Validate singularity rules
     singularityMap.forEach((cards, singularityType) => {
-      const totalQuantity = cards.reduce((acc, card) => acc + card.quantity, 0);
+      const totalQuantity = cards.reduce((acc, card) => acc + (card.quantity ?? 0), 0);
       if (totalQuantity > 1) {
         logger.error(`Deck contains more than 1 ${Singularity[singularityType]} card: ${totalQuantity}`);
         logger.error(`Invalid cards: ${cards.map(card => `${card.name} (${card.setAbbr}-${card.setNumber})`).join(", ")}`);

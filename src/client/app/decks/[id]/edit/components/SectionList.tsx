@@ -16,7 +16,6 @@ interface SectionListProps {
 }
 
 export default function SectionList({ list, displayType }: SectionListProps) {
-  console.log(list);
   const dispatch = useAppDispatch();
   function isCardDisplay() {
     return displayType === DeckDisplayType.Card;

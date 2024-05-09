@@ -1,5 +1,5 @@
 import { Card } from "@mctcg/lib/card.interface";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import styles from "./DisplayCardMode.module.css";
 
 interface DisplayCardModeProps {
@@ -10,11 +10,14 @@ interface DisplayCardModeProps {
 }
 
 export default function DisplayCardMode({ list, handleClick, disableHover = false, sizeCoefficient = 2, }: DisplayCardModeProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const widthRatio = 5;
   const heightRatio = 7;
   const fontSize = 16;
-  const width = widthRatio * sizeCoefficient * fontSize;
-  const height = heightRatio * sizeCoefficient * fontSize;
+  const mobileCoefficient = isMobile ? 0.8 : 1;
+  const width = widthRatio * sizeCoefficient * mobileCoefficient * fontSize;
+  const height = heightRatio * sizeCoefficient * mobileCoefficient * fontSize;
   const classes = [styles.container]
   if (disableHover) {
     classes.push(styles.disableHover)

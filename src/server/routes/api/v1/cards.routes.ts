@@ -14,6 +14,7 @@ cardsRouter.post("/search", async (ctx: ExtendableContext, next) => {
   const setsCache = (ctx as CacheContext).setsCache;
   const cardFactory = new CardFactory(setsCache, cardsCache);
   const cards = await cardsCache.getCardsByQuery(dto, cardFactory);
+  console.log(`Got cards by query... CACHE_ONLY?${dto.cachedResultsOnly}... LENGTH?${cards.length}`)
   ctx.status = 200;
   ctx.body = {
     cards,

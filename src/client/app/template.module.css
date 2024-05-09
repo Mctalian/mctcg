@@ -9,7 +9,7 @@
   max-height: fit-content;
 }
 
-@media (max-width: 875px) {
+@media (max-width: 1200px) {
   .main {
     margin: 4rem 0.5rem;
   }

@@ -40,7 +40,7 @@ export default function EditDeck({ deckIndex }: EditDeckProps) {
   }
 
   function handleCloseCardDialog() {
-    setOpenAddDialog(false);
+    setOpenCardDialog(false);
     dispatch(selectCard(null));
   }
 

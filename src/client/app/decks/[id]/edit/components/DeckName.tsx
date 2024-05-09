@@ -1,5 +1,5 @@
-import { Check, Edit, X } from "@mui/icons-material";
-import { Tooltip, IconButton, Box, TextField } from "@mui/material";
+import { Check, Edit, Close, FileDownload } from "@mui/icons-material";
+import { Tooltip, IconButton, Box, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { renameDeck } from "../../../../store/decksSlice";
@@ -31,24 +31,45 @@ export default function DeckName() {
     setEditMode(false)
   }
 
+  function deckTitle() {
+    if (editing) {
+      return (
+        <>
+          <TextField sx={{ width: "30rem" }} value={deckName} onChange={(e) => setDeckName(e.target.value)}/> <Tooltip title="Submit Deck Name">
+            <IconButton aria-label="submit deck rename" onClick={rename}>
+              <Check />
+            </IconButton>
+          </Tooltip> <Tooltip title="Cancel">
+            <IconButton aria-label="cancel deck rename" onClick={cancel}>
+              <Close />
+            </IconButton>
+          </Tooltip>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <Typography variant="h5" lineHeight={"40px"}>
+            {deckName}
+          </Typography>
+          <Tooltip title="Rename Deck">
+            <IconButton aria-label="rename deck" onClick={edit}>
+              <Edit />
+            </IconButton>
+          </Tooltip>
+          {/* <Tooltip title="Generate PDF">
+            <IconButton aria-label="generate pdf" onClick={(e) => alert("Coming soon")}>
+              <FileDownload/>
+            </IconButton>
+          </Tooltip> */}
+        </>
+      )
+    }
+  }
+
   return (
-    <>
-      {!editing && <h1>{deckName} <Tooltip title="Rename Deck">
-        <IconButton aria-label="rename deck" onClick={edit}>
-          <Edit />
-        </IconButton>
-      </Tooltip></h1>}
-      {editing && <Box sx={{ display: "flex", flexDirection: "row" }}>
-        <TextField sx={{ width: "30rem" }} value={deckName} onChange={(e) => setDeckName(e.target.value)}/> <Tooltip title="Submit Deck Name">
-          <IconButton aria-label="submit deck rename" onClick={rename}>
-            <Check />
-          </IconButton>
-        </Tooltip> <Tooltip title="Cancel">
-          <IconButton aria-label="cancel deck rename" onClick={cancel}>
-            <X />
-          </IconButton>
-        </Tooltip>
-      </Box>}
-    </>
+    <Box sx={{ display: "flex", flexDirection: "row", marginTop: "0.5rem"}}>
+      {deckTitle()}
+    </Box>
   )
 }

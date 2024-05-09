@@ -52,7 +52,9 @@ export class SetsCache {
       logger.error(`Invalid set id: ${setId} (Found ${set.length} sets)`);
       return null;
     }
-    await this.addAbbr(set[0].ptcgoCode, setId);
+    if (set[0].ptcgoCode) {
+      await this.addAbbr(set[0].ptcgoCode, setId);
+    }
     return set[0].ptcgoCode;
   }
 

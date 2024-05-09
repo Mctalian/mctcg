@@ -55,9 +55,9 @@ redis.on("end", () => logger.debug("[REDIS] Connection closed"));
 
 
 export async function redisConnect() {
-  // if (redis.isOpen) {
-  //   return redis;
-  // }
+  if (redis.isOpen) {
+    return redis;
+  }
   return redis.connect();
 }
 

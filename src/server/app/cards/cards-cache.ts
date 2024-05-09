@@ -4,8 +4,13 @@ import { isString } from "../../utils/is-string.js";
 import { CardSearchDto } from "../../shared/card-search-dto.interface.js";
 import { Card } from "./card.interface.js";
 import { CardFactory } from "./card-factory.js";
+import { CURRENT_STANDARD_REGULATIONS } from "../decks/deck-validator.js";
 
 const tcgApiCardsKey = `${Prefix.TcgApi}:cards`;
+
+function sanitizeString(str) {
+  return str.replace(/[^a-zA-Z]/g, '*');
+}
 
 export class CardsCache {
   constructor(
@@ -52,10 +57,43 @@ export class CardsCache {
       const filteredCards = allCards
         .filter(c => !safeQueries.nameQuery || c.name.toLowerCase().includes(safeQueries.nameQuery.toLowerCase()))
         .filter(c => safeQueries.typeQuery.length === 0 || c.types?.some(t => safeQueries.typeQuery.includes(t)))
+        .filter(c => safeQueries.formatQuery !== "Standard" || CURRENT_STANDARD_REGULATIONS.includes(c["regulationMark"]))
 
       return await Promise.all(filteredCards.map((c) => cardFactory.createFromApiObject(c)))
     }
-    return [];
+    const q = this.buildQuery(safeQueries);
+    const apiResults = await PokemonTCG.findCardsByQueries({
+      q
+    });
+    return await Promise.all(apiResults.map((cardResult) => {
+      const setId = cardResult.set.id;
+      const setNumber = cardResult.number;
+      this.cache.set(`${tcgApiCardsKey}:${setId}:${setNumber}`, JSON.stringify(cardResult));
+      return cardFactory.createFromApiObject(cardResult);
+    }));
+  }
+
+  private buildQuery(searchQueries: CardSearchDto) {
+    let q: string[] = [];
+    if (searchQueries.nameQuery) {
+      q.push(`name:${sanitizeString(searchQueries.nameQuery)}*`);
+    }
+    if (searchQueries.typeQuery.length) {
+      for (const type of searchQueries.typeQuery) {
+        q.push(`type:${type}`);
+      }
+    }
+    if (searchQueries.formatQuery === "Standard") {
+      let query = "("
+      const qParts: string[] = []
+      for (const mark of CURRENT_STANDARD_REGULATIONS) {
+        qParts.push(`regulationMark:${mark}`)
+      }
+      query += qParts.join(" OR ");
+      query += ")"
+      q.push(query);
+    }
+    return q.join(" AND ")
   }
 
   /*private*/ async getAllCachedCards() {

@@ -7,7 +7,5 @@ export async function cacheMiddleware(ctx: Koa.Context, next: () => Promise<any>
   ctx.redis = await redisConnect();
   ctx.setsCache = new SetsCache(ctx.redis);
   ctx.cardsCache = new CardsCache(ctx.redis);
-  await next().finally(async () => {
-    await redisDisconnect(ctx.redis);
-  });
+  await next();
 }

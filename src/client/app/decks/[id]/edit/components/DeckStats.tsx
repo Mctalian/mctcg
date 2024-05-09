@@ -33,7 +33,7 @@ export default function DeckStatistics() {
       <p>Avg. Mulligans per Game: {deckStats.averageMulligans}</p>
       <Box>
         <BarChart
-          width={400}
+          width={360}
           height={300}
           series={[
             { data: Array.from(deckStats.handFrequency.values()).map((f) => +(f*100).toFixed(2)), label: "% of opening hands with 1" }

@@ -3,12 +3,15 @@ import { countCards, countSection, countSectionSubtype } from "@mctcg/lib/deck-u
 import { HighlightScope } from "@mui/x-charts";
 import { useAppSelector } from "@mctcg/store/hooks";
 import { useEffect, useState } from "react";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 export default function DeckComposition() {
-  const deck = useAppSelector((state) => state.decks.decks[state.decks.selectedDeckIndex]);
   const [totalCards, setTotalCards] = useState(0);
   const [innerPieData, setInnerPieData] = useState([]);
   const [outerPieData, setOuterPieData] = useState([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const deck = useAppSelector((state) => state.decks.decks[state.decks.selectedDeckIndex]);
 
   useEffect(() => {
     if (deck?.deck) {
@@ -29,7 +32,7 @@ export default function DeckComposition() {
       <p>Total cards: {totalCards}</p>
       <PieChart
         height={500}
-        width={400}
+        width={360}
         skipAnimation={true}
         slotProps={{
           legend: {
@@ -37,6 +40,9 @@ export default function DeckComposition() {
             position: {
               horizontal: "middle",
               vertical: "top",
+            },
+            labelStyle: {
+              fontSize: isMobile ? "0.8rem" : "1rem"
             }
           }
         }}
