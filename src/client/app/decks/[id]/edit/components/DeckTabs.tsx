@@ -1,6 +1,7 @@
-import { Box, Tabs, Tab } from "@mui/material";
+"use client"
+
+import { Box, Tabs, Tab, CircularProgress } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
-import { Deck } from "../../../../../lib/deck.interface";
 import SectionList from "./SectionList";
 import { DeckDisplayType } from "../../../../../lib/deck-display-type.interface";
 import TabPanel from "./TabPanel";
@@ -17,6 +18,10 @@ export default function DeckTabs({ displayType }: DeckTabsProps) {
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  if (!deck) {
+    return <CircularProgress />
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
