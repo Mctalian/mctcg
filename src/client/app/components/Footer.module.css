@@ -13,3 +13,9 @@
     rgba(var(--background-end-rgb), 0.5)
   );
 }
+
+@media print {
+  .footer {
+    display: none;
+  }
+}

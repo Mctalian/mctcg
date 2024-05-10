@@ -24,7 +24,7 @@ export default function SectionList({ list, displayType }: SectionListProps) {
     return (
       <List>
         { list.map((c) => (
-          <ListItem key={`${c.setAbbr}-${c.setNumber}`}>
+          <ListItem key={`${c.id}`}>
             {c.quantity}x {c.name} ({c.setAbbr} {c.setNumber} Reg: {c.regCode})
           </ListItem>
         ))}

@@ -58,10 +58,12 @@ export class SetsCache {
     return set[0].ptcgoCode;
   }
 
-  public async getSets(): Promise<PokemonTCG.Set[]> {
-    const sets = JSON.parse((await this.cache.get(tcgApiSetsKey)) || "[]");
-    if (sets.length > 0) {
-      return sets;
+  public async getSets(cachedResultsOnly: boolean = true): Promise<PokemonTCG.Set[]> {
+    if (cachedResultsOnly) {
+      const sets = JSON.parse((await this.cache.get(tcgApiSetsKey)) || "[]");
+      if (sets.length > 0) {
+        return sets;
+      }
     }
     const apiSets = await PokemonTCG.getAllSets();
     await this.populateSets(apiSets);

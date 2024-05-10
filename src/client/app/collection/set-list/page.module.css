@@ -1,0 +1,54 @@
+.series {
+  margin-bottom: 1rem;
+  width: 100%;
+  page-break-inside: avoid;
+}
+
+.setRow {
+  border: 1px solid;
+}
+
+.setNameContainer {
+  width: 80%;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  padding-left: 0.25rem;
+}
+
+.setName {
+  display: inline-block;
+  object-fit: contain;
+  font-size: 0.6rem;
+  margin-right: 0.25rem;
+  line-height: 24px;
+}
+
+.setYear {
+  font-size: 0.7rem;
+  width: 2rem;
+  padding: 0 0.05rem;
+  text-align: center;
+  line-height: 24px;
+}
+
+.setLogo {
+  object-fit: contain;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+@media print {
+  .series {
+    color: black;
+  }
+  .seriesName {
+    font-size: 0.85rem;
+  }
+  .setListMain {
+    overflow: hidden;
+  }
+}

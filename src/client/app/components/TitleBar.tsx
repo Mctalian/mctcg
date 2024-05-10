@@ -11,6 +11,10 @@ export default function TitleBar() {
       name: "Decks",
       href: "/decks",
     },
+    {
+      name: "Collection",
+      href: "/collection",
+    },
   ];
   const drawerWidth = 240;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,7 +41,7 @@ export default function TitleBar() {
   );
   return (
     <>
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{displayPrint: "none"}}>
         <Toolbar>
         <IconButton
             color="inherit"
