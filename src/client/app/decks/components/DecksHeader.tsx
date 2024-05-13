@@ -13,8 +13,7 @@ export default function DecksHeader() {
   return (
     <Box sx={{ display: "flex", flexDirection: "row", width: "100%", justifyContent: "space-between", marginBottom: "1rem" }}>
       <Box sx={{ justifyContent: "start"}}>
-        <Button className={styles.button} sx={{ marginRight: "1rem"}} variant="contained" href="/decks/builder"><AddIcon/>New Deck</Button>
-        <Button className={styles.button} sx={{ marginRight: "1rem"}} variant="contained" href="/decks/import"><ArrowDownwardIcon/>Import PTCGL</Button>
+        <Button className={styles.button} sx={{ marginRight: "1rem"}} variant="contained" href="/decks/new"><AddIcon/>New Deck</Button>
       </Box>
       <Box sx={{ justifyContent: "end"}}>
         <Suspense fallback="Loading...">

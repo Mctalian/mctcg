@@ -8,14 +8,19 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setLoading } from "../../store/loadingSlice";
 import { setSuccess } from "../../store/successSlice";
 import { useRouter } from "next/router";
-import { updateDeck } from "../../store/decksSlice";
+import { selectDeck, updateDeck } from "../../store/decksSlice";
 import { SortType } from "../../../lib/sort-type.enum";
+import { useEffect } from "react";
 
 export default function ListDecks() {
 
   const dispatch = useAppDispatch();
   const { decks } = useAppSelector((state) => state.decks);
   const { playerName, playerId, playerDob, preferredSort } = useAppSelector((state) => state.playerInfo);
+
+  useEffect(() => {
+    dispatch(selectDeck(-1));
+  }, [])
 
   async function validateDeck(e, d, i) {
     e.preventDefault();
@@ -132,19 +137,19 @@ export default function ListDecks() {
                 <Box sx={{ flexDirection: "column", margin: "0 0.5rem"}}>
                   Top 4 Pokemon
                   {d.deck.Pokemon.slice().sort((a, b) => b.quantity - a.quantity).filter((_c, i) => i <= 3).map((c: TcgCard) => (
-                    <p key={`${c.setAbbr}-${c.setNumber}`} className={styles.cardRow}>{c.quantity}x {c.name} <span className={styles.setInfo}>({c.setAbbr} {c.setNumber})</span></p>
+                    <p key={`${c.setAbbr}-${c.setNumber}`} className={styles.cardRow}>{c.quantity}x <strong>{c.name}</strong> <span className={styles.setInfo}>({c.setAbbr} {c.setNumber})</span></p>
                   ))}
                 </Box>
                 <Box sx={{ flexDirection: "column", margin: "0 0.5rem"}}>
                   Top 4 Trainers
                   {d.deck.Trainer.slice().sort((a, b) => b.quantity - a.quantity).filter((_c, i) => i <= 3).map((c: TcgCard) => (
-                    <p key={`${c.setAbbr}-${c.setNumber}`} className={styles.cardRow}>{c.quantity}x {c.name} <span className={styles.setInfo}>({c.setAbbr} {c.setNumber})</span></p>
+                    <p key={`${c.setAbbr}-${c.setNumber}`} className={styles.cardRow}>{c.quantity}x <strong>{c.name}</strong> <span className={styles.setInfo}>({c.setAbbr} {c.setNumber})</span></p>
                   ))}
                 </Box>
                 <Box sx={{ flexDirection: "column", margin: "0 0.5rem"}}>
                   Top 4 Energy
                   {d.deck.Energy.slice().sort((a, b) => b.quantity - a.quantity).filter((_c, i) => i <= 3).map((c: TcgCard) => (
-                    <p key={`${c.setAbbr}-${c.setNumber}`} className={styles.cardRow}>{c.quantity}x {c.name} <span className={styles.setInfo}>({c.setAbbr} {c.setNumber})</span></p>
+                    <p key={`${c.setAbbr}-${c.setNumber}`} className={styles.cardRow}>{c.quantity}x <strong>{c.name}</strong> <span className={styles.setInfo}>({c.setAbbr} {c.setNumber})</span></p>
                   ))}
                 </Box>
               </Box>

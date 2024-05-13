@@ -41,7 +41,7 @@ export class CardsCache {
     subTypeQuery: [],
     rarityQuery: [],
     retreatCostQuery: -1,
-    formatQuery: "Standard",
+    formatQuery: "Expanded",
     cachedResultsOnly: true,
   }
 
@@ -75,7 +75,7 @@ export class CardsCache {
   private buildQuery(searchQueries: CardSearchDto) {
     let q: string[] = [];
     if (searchQueries.nameQuery) {
-      q.push(`name:${sanitizeString(searchQueries.nameQuery)}*`);
+      q.push(`name:*${sanitizeString(searchQueries.nameQuery)}*`);
     }
     if (searchQueries.typeQuery.length) {
       for (const type of searchQueries.typeQuery) {
@@ -91,6 +91,8 @@ export class CardsCache {
       query += qParts.join(" OR ");
       query += ")"
       q.push(query);
+    } else if (searchQueries.formatQuery === "Expanded") {
+      q.push(`legalities.expanded:legal`)
     }
     return q.join(" AND ")
   }

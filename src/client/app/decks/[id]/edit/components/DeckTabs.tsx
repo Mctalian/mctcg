@@ -9,9 +9,10 @@ import { useAppSelector } from "@mctcg/store/hooks";
 
 interface DeckTabsProps {
   displayType: DeckDisplayType
+  addNewCard: () => void
 }
 
-export default function DeckTabs({ displayType }: DeckTabsProps) {
+export default function DeckTabs({ displayType, addNewCard }: DeckTabsProps) {
   const deck = useAppSelector((state) => state.decks.decks[state.decks.selectedDeckIndex] );
   const [value, setValue] = useState(0);
 
@@ -34,16 +35,16 @@ export default function DeckTabs({ displayType }: DeckTabsProps) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <SectionList list={deck.deck.Pokemon} displayType={displayType} />
+        <SectionList list={deck.deck.Pokemon} displayType={displayType} addNewCard={addNewCard}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <SectionList list={deck.deck.Trainer} displayType={displayType} />
+        <SectionList list={deck.deck.Trainer} displayType={displayType} addNewCard={addNewCard}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <SectionList list={deck.deck.Energy} displayType={displayType} />
+        <SectionList list={deck.deck.Energy} displayType={displayType} addNewCard={addNewCard}/>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SectionList list={deck.deck.Pokemon.concat(deck.deck.Trainer, deck.deck.Energy)} displayType={displayType} />
+        <SectionList list={deck.deck.Pokemon.concat(deck.deck.Trainer, deck.deck.Energy)} displayType={displayType} addNewCard={addNewCard}/>
       </TabPanel>
     </Box>
   );

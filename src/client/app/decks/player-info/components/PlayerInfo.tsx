@@ -8,6 +8,7 @@ import { useId } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { initialPlayerInfoState, setPlayerDob, setPlayerId, setPlayerName, setPreferredSortType } from "../../../store/playerInfoSlice";
 import { SortType } from "../../../../lib/sort-type.enum";
+import { useRouter } from "next/navigation";
 
 export default function PdfPrepForm() {
   const playerNameId = useId();
@@ -19,6 +20,12 @@ export default function PdfPrepForm() {
   const loading = useAppSelector((state) => state.loading.value);
   const { playerName, playerId, playerDob, preferredSort } = useAppSelector((state) => state.playerInfo);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  function submitPlayerInfo() {
+    sendGAEvent({ event: "buttonClicked", value: "submitPlayerInfo"});
+    router.back();
+  }
 
   return (
     <Box
@@ -85,8 +92,7 @@ export default function PdfPrepForm() {
         type="submit"
         variant="contained"
         disabled={loading}
-        onClick={() => sendGAEvent({ event: "buttonClicked", value: "submitPlayerInfo"})}
-        href="/decks"
+        onClick={submitPlayerInfo}
       >
         Submit
       </Button>

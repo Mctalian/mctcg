@@ -54,7 +54,7 @@ export default function EditDeck({ deckIndex }: EditDeckProps) {
         <DeckName />
         <DeckDisplayPreferences />
         <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%", flexWrap: "inherit" }}>
-          <DeckTabs displayType={displayType} />
+          <DeckTabs displayType={displayType} addNewCard={addNewCard} />
           <DeckStatsTabs />
         </Box>
         <Tooltip title="Add a card">

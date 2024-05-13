@@ -20,7 +20,8 @@ export const decksSlice = createSlice({
   reducers: {
     addDeck: (state, action: PayloadAction<Deck>) => {
       if (!state.decks?.find((d) => d.name === action.payload.name)) {
-        state.decks.push(action.payload)
+        const newLen = state.decks.push(action.payload)
+        state.selectedDeckIndex = newLen - 1;
       }
     },
     updateDeck: (state, action: PayloadAction<{ deckIndex: number, deck: Deck}>) => {
@@ -31,6 +32,7 @@ export const decksSlice = createSlice({
     },
     removeDeck: (state, action: PayloadAction<string>) => {
       state.decks = state.decks.filter((d) => d.name !== action.payload);
+      state.selectedDeckIndex = -1;
     },
     duplicateDeck: (state, action: PayloadAction<Deck>) => {
       const newDeck = action.payload;

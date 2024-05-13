@@ -59,7 +59,7 @@ export default function AddCardDialog({ open, handleClose}: AddCardDialogProps) 
     }).finally(() => {
       setSearchLoading(false);
     })
-  }, [searchTerm])
+  }, [searchTerm, standardFormatOnly])
 
   function onChange() {
     setSearchTerm(rawSearchTerm)
