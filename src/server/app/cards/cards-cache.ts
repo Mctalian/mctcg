@@ -56,7 +56,7 @@ export class CardsCache {
       const filteredCards = allCards
         .filter(c => !safeQueries.nameQuery || c.name.toLowerCase().includes(safeQueries.nameQuery.toLowerCase()))
         .filter(c => safeQueries.typeQuery.length === 0 || c.types?.some(t => safeQueries.typeQuery.includes(t)))
-        .filter(c => safeQueries.formatQuery !== "Standard" || CURRENT_STANDARD_REGULATIONS.includes(c["regulationMark"]))
+        .filter(c => safeQueries.formatQuery !== "Standard" || CURRENT_STANDARD_REGULATIONS.includes(c["regulationMark"] || (c.supertype === "Energy" && c.subtypes.findIndex((s) => s === PokemonTCG.Subtype.Basic) >= 0)))
 
       return await Promise.all(filteredCards.map((c) => cardFactory.createFromApiObject(c)))
     }
@@ -88,6 +88,7 @@ export class CardsCache {
       for (const mark of CURRENT_STANDARD_REGULATIONS) {
         qParts.push(`regulationMark:${mark}`)
       }
+      qParts.push(`(supertype:Energy AND subtypes:Basic)`)
       query += qParts.join(" OR ");
       query += ")"
       q.push(query);
