@@ -8,9 +8,11 @@ RUN npm ci
 
 COPY --link .swcrc build.sh ./
 COPY --link src ./src
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 FROM node:20.11.1-alpine3.19 as deploy
+ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV IS_PROD=true
 WORKDIR /app
