@@ -123,7 +123,7 @@ export class DeckValidator {
         if (!this.deck.errors) {
           this.deck.errors = [];
         }
-        this.deck.errors.push(`${DeckValidationError.SingularityViolation}: ${Singularity[singularityType]} has ${totalQuantity} cards`);
+        this.deck.errors.push(`${DeckValidationError.SingularityViolation}: deck has ${totalQuantity} ${Singularity[singularityType]} cards`);
       }
     });
   }

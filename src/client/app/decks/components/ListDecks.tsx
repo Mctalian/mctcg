@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, CardHeader, IconButton, Tooltip } from "@mui/material";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from "@mui/icons-material/Edit";
+import { Error } from "@mui/icons-material";
 import CheckIcon from '@mui/icons-material/Check';
 import { Card as TcgCard } from "../../../lib/card.interface";
 import styles from "./ListDeck.module.css";
@@ -38,18 +39,17 @@ export default function ListDecks() {
       },
       body: JSON.stringify(dto),
     });
-    if (response.status !== 200) {
-      console.error(response.statusText);
-    } else {
+    if (response.status === 400 || response.status === 200) {
+      const deck = await response.json();
       dispatch(updateDeck({
         deckIndex: i,
         deck: {
           name,
-          deck: await response.json(),
+          deck,
           sortType
         }
       }));
-      dispatch(setSuccess(true));
+      dispatch(setSuccess(deck.errors.length === 0));
     }
     dispatch(setLoading(false));
   }
@@ -130,7 +130,14 @@ export default function ListDecks() {
                   </Tooltip>
                 </>
               }
-              subheader={`${d.deck.format} ${d.deck.errors?.length > 0 ? "(Invalid)" : "(Valid)"}`}
+              subheader={<span>{d.deck.format} {d.deck.errors?.length > 0 ?
+                <>
+                  <span>(<strong>Invalid</strong>) <Tooltip title={<>{d.deck.errors.map((e) => <p>{e}</p>)}</>}>
+                    <Error sx={{ lineHeight: 1.5, verticalAlign: "middle" }} color="error"/>
+                  </Tooltip></span>
+                </> :
+                "(Valid)"}
+              </span>}
             />
             <CardContent>
               <Box sx={{ display: "flex", flexDirection: "row"}}>

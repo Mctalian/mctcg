@@ -5,9 +5,9 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { sendGAEvent } from "@next/third-parties/google";
 import { format, isValid } from "date-fns";
 import { useId } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { initialPlayerInfoState, setPlayerDob, setPlayerId, setPlayerName, setPreferredSortType } from "../../../store/playerInfoSlice";
-import { SortType } from "../../../../lib/sort-type.enum";
+import { useAppDispatch, useAppSelector } from "@mctcg/store/hooks";
+import { initialPlayerInfoState, setPlayerDob, setPlayerId, setPlayerName, setPreferredSortType } from "@mctcg/store/playerInfoSlice";
+import { SortType } from "@mctcg/lib/sort-type.enum";
 import { useRouter } from "next/navigation";
 
 export default function PdfPrepForm() {
@@ -22,7 +22,8 @@ export default function PdfPrepForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  function submitPlayerInfo() {
+  function submitPlayerInfo(e) {
+    e.preventDefault();
     sendGAEvent({ event: "buttonClicked", value: "submitPlayerInfo"});
     router.back();
   }

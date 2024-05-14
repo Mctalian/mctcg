@@ -125,7 +125,14 @@ export class DeckService {
       return true
     } else {
       this.ctx.status = 400;
-      this.ctx.body = `Invalid decklist:\n\n${JSON.stringify(deck.getValidationErrors(), null, 2)}`;
+      this.ctx.body = {
+        [Section.Pokemon]: deck[Section.Pokemon],
+        [Section.Trainer]: deck[Section.Trainer],
+        [Section.Energy]: deck[Section.Energy],
+        format: deck.format,
+        errors: deck.errors,
+        warnings: deck.warnings,
+      } as DeckDto;
       return false;
     }
   }
