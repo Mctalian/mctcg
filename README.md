@@ -1,5 +1,7 @@
 # McTCG
 
+<a href="https://www.buymeacoffee.com/mctalian"><img className={styles.buyMeACoffee} src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=mctalian&button_colour=FF5F5F&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" /></a>
+
 Source code for [McTCG](https://mctcg.com/), a set of tools for Pokemon TCG collectors and players. **At this time, all data is stored on your device. I do not have access to any of your data.** As a result, if you switch between multiple devices, your decks and player info will not be available on all devices.
 
 _Project is on pause due to an injury_
